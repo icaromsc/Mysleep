@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Snorlax_angELO</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="action_gravacoes">Gravações</string>
+
+    <string name="avancar">AVANÇAR</string>
+    <string name="btn_inicar">INICIAR</string>
+    <string name="btn_parar">PARAR</string>
+    <string name="granvando">CAPTURANDO ÁUDIO...</string>
+    <string name="inicar_captura">CAPTURAR ÁUDIO</string>
+    <string name="capacidade">Capacidade Máx.:</string>
+    <string name="title_activity_primeiro_passo">PrimeiroPasso</string>
+</resources>
