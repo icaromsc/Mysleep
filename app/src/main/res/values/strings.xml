@@ -10,5 +10,5 @@
     <string name="granvando">CAPTURANDO ÁUDIO...</string>
     <string name="inicar_captura">CAPTURAR ÁUDIO</string>
     <string name="capacidade">Capacidade Máx.:</string>
-    <string name="title_activity_primeiro_passo">PrimeiroPasso</string>
+    <string name="title_activity_primeiro_passo">Primeiro Passo</string>
 </resources>
