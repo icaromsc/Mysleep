@@ -3,6 +3,7 @@ package br.edu.ufcspa.snorlax_angelo;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StatFs;
 import android.os.SystemClock;
@@ -20,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.view.Menu;
@@ -37,34 +39,41 @@ import android.widget.Toast;
 import ufcspa.edu.br.sono_angelo_v2.R;
 
 public class AudioRecorder extends AppCompatActivity {
-
+    private long record_size = 20000; //1 minute
     private static final int RECORDER_BPP = 16;
     private static final String AUDIO_RECORDER_FILE_EXT_WAV = ".wav";
     private static final String AUDIO_RECORDER_FOLDER = "Snore_angELO";
     private static final String AUDIO_RECORDER_TEMP_FILE = "record_temp.raw";
     private static final int RECORDER_SAMPLERATE = 44100;
+    boolean uploadingFile;
+
+    String fileToBeUploaded;
     private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
     private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
-
+    FileInputStream inAudioData = null;
     private static final long BYTES_HORA = 320197200;
-
+    String filename;
     private AudioRecord recorder = null;
     private int bufferSize = 0;
     private Thread recordingThread = null;
     private Thread processingThread = null;
     private boolean isRecording = false;
     private boolean isProcessing = false;
-    private String fileToprocess = "";
+    String fileToprocess = "";
 
 
     int serverResponseCode = 0;
     private ProgressDialog dialog = null;
 
-    private String upLoadServerUri = null;
+    String upLoadServerUri = "http://angelo.inf.ufrgs.br/snorlax/UploadToServer.php";
+
 
     /**********  File Path *************/
     final String uploadFilePath = "/mnt/sdcard/";
     final String uploadFileName = "service_lifecycle.png";
+
+
+
 
     private Chronometer cronometro;
     private Button btn_gravacao;
@@ -113,7 +122,6 @@ public class AudioRecorder extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_audio_recorder, menu);
         return true;
-
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -170,6 +178,24 @@ public class AudioRecorder extends AppCompatActivity {
         return (file.getAbsolutePath() + "/" + System.currentTimeMillis()+".raw");
     }
 
+    private String listFilesFromDir(){
+        String path = Environment.getExternalStorageDirectory().toString()+"/"+AUDIO_RECORDER_FOLDER;
+        //Log.d("Files", "Path: " + path);
+        File f = new File(path);
+        File file[] = f.listFiles();
+        try{
+            if(file!=null && file.length>0) {
+                Log.d("Files", "Size: " + file.length);
+                return file[0].getName();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
     private String getFinalTempFilename(){
         String filepath = Environment.getExternalStorageDirectory().getPath();
         File file = new File(filepath,AUDIO_RECORDER_FOLDER);
@@ -216,8 +242,6 @@ public class AudioRecorder extends AppCompatActivity {
     }
 
     private void getAudioData(){
-        long record_size = 60000; //1 minute
-
         fileToprocess = "";
         isProcessing = true;
         while(isRecording) {
@@ -229,39 +253,52 @@ public class AudioRecorder extends AppCompatActivity {
     private void processAudioData(){
 
         //Create final processed audio file
-        FileOutputStream audioFinal = null;
-        String filename = getFinalTempFilename();
+//        FileOutputStream audioFinal = null;
+//        filename = getFinalTempFilename();
+//
+//        try{
+//            audioFinal = new FileOutputStream(filename);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-        try{
-            audioFinal = new FileOutputStream(filename);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //FileInputStream inAudioData = null;
 
-        FileInputStream inAudioData = null;
+        while (isProcessing){
 
-        while (isProcessing || fileToprocess.compareToIgnoreCase("") > 0){
-            if (fileToprocess.compareToIgnoreCase("") > 0){ //exist a file to process
-
-                byte[] data = new byte[bufferSize];
+            filename = listFilesFromDir();
+            if (filename != null && !uploadingFile){ //exist a file to process
                 System.out.println("*** PROCESSANDO NOVO TEMP AUDIO");
                 try{
-                    inAudioData = new FileInputStream(fileToprocess);
+
+                    //dialog = ProgressDialog.show(getApplicationContext(), "", "Uploading file...", true);
+                    new Thread(new Runnable() {
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    //messageText.setText("uploading started.....");
+                                    Toast.makeText(getApplicationContext(), "uploading started.....", Toast.LENGTH_SHORT).show();
+
+                                    Log.d("app", "uploading file...");
+                                    fileToBeUploaded=filename;
+                                    new UploadFileAsync().execute("");
+                                    }
+                            });
+                        }
+                    }).start();
 
 
 
 //                    while(inAudioData.read(data) != -1){
 //                        audioFinal.write(data);
 //                    }
-//
-                    inAudioData.close();
-                    deleteTempFile(fileToprocess);
+///
+//                    inAudioData.close();
+                    deleteTempFile(filename);
 
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -270,14 +307,14 @@ public class AudioRecorder extends AppCompatActivity {
 
         }
 
-        try{
-            audioFinal.close();
+        /*try{
+            //audioFinal.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+*/
         //Create final audio file
-        copyWaveFile(getFinalTempFilename(),getFilename());
+        copyWaveFile(getFinalTempFilename(), getFilename());
         deleteFinalTempFile();
 
     }
@@ -309,7 +346,7 @@ public class AudioRecorder extends AppCompatActivity {
                     try {
 
                         minuteAtu = cronometro.getDrawingTime();
-                        if ((minuteAtu - minuteIni) > 60000){
+                        if ((minuteAtu - minuteIni) > record_size){
                             System.out.println("*** UM MINUTO: " + cronometro.getDrawingTime());
                             limiteTime = false;
                         }
@@ -497,150 +534,142 @@ public class AudioRecorder extends AppCompatActivity {
     }
 
 
-    /*public int uploadFile(String sourceFileUri) {
 
 
-        String fileName = sourceFileUri;
+    private class UploadFileAsync extends AsyncTask<String, Void, String> {
 
-        HttpURLConnection conn = null;
-        DataOutputStream dos = null;
-        String lineEnd = "\r\n";
-        String twoHyphens = "--";
-        String boundary = "*****";
-        int bytesRead, bytesAvailable, bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 1 * 1024 * 1024;
-        File sourceFile = new File(sourceFileUri);
-
-        if (!sourceFile.isFile()) {
-
-            dialog.dismiss();
-
-            Log.e("uploadFile", "Source File not exist :"
-                    + uploadFilePath + "" + uploadFileName);
-
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    messageText.setText("Source File not exist :"
-                            +uploadFilePath + "" + uploadFileName);
-                }
-            });
-
-            return 0;
-
-        }
-        else
-        {
+        @Override
+        protected String doInBackground(String... params) {
+            Log.d("app","open task...");
+            uploadingFile=true;
             try {
+                String sourceFileUri = fileToBeUploaded;
+                Log.d("app","async task source file:"+sourceFileUri);
+                HttpURLConnection conn = null;
+                DataOutputStream dos = null;
+                String lineEnd = "\r\n";
+                String twoHyphens = "--";
+                String boundary = "*****";
+                int bytesRead, bytesAvailable, bufferSize;
+                byte[] buffer;
+                int maxBufferSize = 1 * 1024 * 1024;
+                File sourceFile = new File(sourceFileUri);
 
-                // open a URL connection to the Servlet
-                FileInputStream fileInputStream = new FileInputStream(sourceFile);
-                URL url = new URL(upLoadServerUri);
+                if (sourceFile.isFile()) {
 
-                // Open a HTTP  connection to  the URL
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setDoInput(true); // Allow Inputs
-                conn.setDoOutput(true); // Allow Outputs
-                conn.setUseCaches(false); // Don't use a Cached Copy
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Connection", "Keep-Alive");
-                conn.setRequestProperty("ENCTYPE", "multipart/form-data");
-                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-                conn.setRequestProperty("uploaded_file", fileName);
+                    try {
+                        String upLoadServerUri = "http://angelo.inf.ufrgs.br/snorlax/upload.php";
 
-                dos = new DataOutputStream(conn.getOutputStream());
+                        // open a URL connection to the Servlet
+                        FileInputStream fileInputStream = new FileInputStream(sourceFile);
+                        //fileInputStream=inAudioData;
+                        URL url = new URL(upLoadServerUri);
 
-                dos.writeBytes(twoHyphens + boundary + lineEnd);
-                dos.writeBytes("Content-Disposition: form-data; name="uploaded_file";filename=""
-                                + fileName + """ + lineEnd);
+                        // Open a HTTP connection to the URL
+                        conn = (HttpURLConnection) url.openConnection();
+
+                        Log.d("app","File upload started...");
+                        conn.setDoInput(true); // Allow Inputs
+                        conn.setDoOutput(true); // Allow Outputs
+                        conn.setUseCaches(false); // Don't use a Cached Copy
+                        conn.setRequestMethod("POST");
+                        conn.setRequestProperty("Connection", "Keep-Alive");
+                        conn.setRequestProperty("ENCTYPE",
+                                "multipart/form-data");
+                        conn.setRequestProperty("Content-Type",
+                                "multipart/form-data;boundary=" + boundary);
+                        conn.setRequestProperty("bill", sourceFileUri);
+
+                        dos = new DataOutputStream(conn.getOutputStream());
+
+                        dos.writeBytes(twoHyphens + boundary + lineEnd);
+                        dos.writeBytes("Content-Disposition: form-data; name=\"bill\";filename=\""
+                                + sourceFileUri + "\"" + lineEnd);
 
                         dos.writeBytes(lineEnd);
 
-                // create a buffer of  maximum size
-                bytesAvailable = fileInputStream.available();
+                        // create a buffer of maximum size
+                        bytesAvailable = fileInputStream.available();
 
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                buffer = new byte[bufferSize];
+                        bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                        buffer = new byte[bufferSize];
 
-                // read file and write it into form...
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                        // read file and write it into form...
+                        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 
-                while (bytesRead > 0) {
-
-                    dos.write(buffer, 0, bufferSize);
-                    bytesAvailable = fileInputStream.available();
-                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-                }
-
-                // send multipart form data necesssary after file data...
-                dos.writeBytes(lineEnd);
-                dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-
-                // Responses from the server (code and message)
-                serverResponseCode = conn.getResponseCode();
-                String serverResponseMessage = conn.getResponseMessage();
-
-                Log.i("uploadFile", "HTTP Response is : "
-                        + serverResponseMessage + ": " + serverResponseCode);
-
-                if(serverResponseCode == 200){
-
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-
-                            String msg = "File Upload Completed.\n\n See uploaded file here : \n\n"
-                                    +" http://www.androidexample.com/media/uploads/"
-                                    +uploadFileName;
-
-                            messageText.setText(msg);
-                            Toast.makeText(UploadToServer.this, "File Upload Complete.",
-                                    Toast.LENGTH_SHORT).show();
+                        while (bytesRead > 0) {
+                            dos.write(buffer, 0, bufferSize);
+                            bytesAvailable = fileInputStream.available();
+                            bufferSize = Math
+                                    .min(bytesAvailable, maxBufferSize);
+                            bytesRead = fileInputStream.read(buffer, 0,
+                                    bufferSize);
                         }
-                    });
+
+                        // send multipart form data necesssary after file
+                        // data...
+                        dos.writeBytes(lineEnd);
+                        dos.writeBytes(twoHyphens + boundary + twoHyphens
+                                + lineEnd);
+
+                        // Responses from the server (code and message)
+                        serverResponseCode = conn.getResponseCode();
+                        String serverResponseMessage = conn
+                                .getResponseMessage();
+
+                        if (serverResponseCode == 200) {
+                            // messageText.setText(msg);
+                            //Toast.makeText(ctx, "File Upload Complete.",
+                              //    Toast.LENGTH_SHORT).show();
+                            Log.d("app","File upload complete");
+                            // recursiveDelete(mDirectory1);
+                        }else{
+                            Log.e("app","Error, server returned: "+serverResponseCode+"/n"+serverResponseMessage);
+                        }
+
+                        // close the streams //
+                        fileInputStream.close();
+                        dos.flush();
+                        dos.close();
+
+                    } catch (Exception e) {
+
+                        // dialog.dismiss();
+                        e.printStackTrace();
+
+                    }
+                    // dialog.dismiss();
+
+                }else{
+                    Log.d("app","file no finded");
+                                     // End else block
+                    Log.d("app", sourceFile.getAbsolutePath());
                 }
 
-                //close the streams //
-                fileInputStream.close();
-                dos.flush();
-                dos.close();
 
-            } catch (MalformedURLException ex) {
+            } catch (Exception ex) {
+                // dialog.dismiss();
 
-                dialog.dismiss();
                 ex.printStackTrace();
-
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        messageText.setText("MalformedURLException Exception : check script url.");
-                        Toast.makeText(UploadToServer.this, "MalformedURLException",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
-            } catch (Exception e) {
-
-                dialog.dismiss();
-                e.printStackTrace();
-
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        messageText.setText("Got Exception : see logcat ");
-                        Toast.makeText(UploadToServer.this, "Got Exception : see logcat ",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-                Log.e("Upload file to server Exception", "Exception : "
-                        + e.getMessage(), e);
             }
-            dialog.dismiss();
-            return serverResponseCode;
+            return "Executed";
+        }
 
-        } // End else block
+        @Override
+        protected void onPostExecute(String result) {
+            Log.d("app","finish task");
+            uploadingFile=false;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
     }
-    */
 
 
 
