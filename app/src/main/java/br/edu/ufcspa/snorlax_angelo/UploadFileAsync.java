@@ -6,6 +6,7 @@ import android.util.Log;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -13,12 +14,12 @@ import java.net.URL;
  * Created by Carlos on 03/10/2016.
  */
 class UploadFileAsync extends AsyncTask<String, Void, String> {
-
+    String sourceFileUri;
     @Override
     protected String doInBackground(String... params) {
         Log.d("app", "open task...");
         try {
-            String sourceFileUri = params[0];
+            sourceFileUri = params[0];
             Log.d("app","async task source file:"+sourceFileUri);
             HttpURLConnection conn = null;
             DataOutputStream dos = null;
@@ -95,12 +96,11 @@ class UploadFileAsync extends AsyncTask<String, Void, String> {
                             .getResponseMessage();
 
                     if (serverResponseCode == 200) {
-                        // messageText.setText(msg);
-                        //Toast.makeText(ctx, "File Upload Complete.",
-                        //    Toast.LENGTH_SHORT).show();
                         Log.d("app","File upload complete");
-                        Log.d("app",serverResponseMessage);
-                        // recursiveDelete(mDirectory1);
+                        Log.d("app", serverResponseMessage);
+                        deleteTempFile(sourceFileUri);
+                        //recursiveDelete(mDirectory1);
+
                     }else{
                         Log.e("app","Error, server returned: "+serverResponseCode+"/n"+serverResponseMessage);
                     }
@@ -145,5 +145,17 @@ class UploadFileAsync extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onProgressUpdate(Void... values) {
+
+    }
+
+
+    private void deleteTempFile(String filename) {
+        File file = new File(filename);
+        try {
+            boolean v=file.getCanonicalFile().delete();
+            Log.w("Delete Check", "File deleted: " + file +" state:" + v);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

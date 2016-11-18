@@ -3,6 +3,7 @@ package br.edu.ufcspa.snorlax_angelo;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StatFs;
@@ -130,6 +131,9 @@ public class AudioRecorder extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.action_gravacoes:
                 Toast.makeText(AudioRecorder.this, "Falta desenvolver...", Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(this, TelaQuestionario.class); //Cria intent detalhes
+                startActivity(intent2); //Ativa a nova intent
+
             /*case R.id.action_grafico:
                 Intent intent2 = new Intent(this, TelaGrafico.class); //Cria intent detalhes
                 startActivity(intent2); //Ativa a nova intent
@@ -186,7 +190,11 @@ public class AudioRecorder extends AppCompatActivity {
         try{
             if(file!=null && file.length>0) {
                 Log.d("Files", "Size: " + file.length);
-                return path+file[0].getName();
+                for (int i=0;i<file.length;i++){
+                    Log.d("Files", "File in dir: " +file[i].getName());
+                }
+                return path+file[file.length-1].getName();
+
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -252,17 +260,17 @@ public class AudioRecorder extends AppCompatActivity {
 
     private void processAudioData(){
 
-        //Create final processed audio file
-//        FileOutputStream audioFinal = null;
-//        filename = getFinalTempFilename();
-//
-//        try{
-//            audioFinal = new FileOutputStream(filename);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+//        Create final processed audio file
+        FileOutputStream audioFinal = null;
+        filename = getFinalTempFilename();
+
+        try{
+            audioFinal = new FileOutputStream(filename);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //FileInputStream inAudioData = null;
 
@@ -291,7 +299,7 @@ public class AudioRecorder extends AppCompatActivity {
 
 
 
-//                    while(inAudioData.read(data) != -1){
+                    //while(inAudioData.read(data) != -1){
 //                        audioFinal.write(data);
 //                    }
 ///

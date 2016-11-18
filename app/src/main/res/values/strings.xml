@@ -11,4 +11,17 @@
     <string name="inicar_captura">CAPTURAR ÁUDIO</string>
     <string name="capacidade">Capacidade Máx.:</string>
     <string name="title_activity_primeiro_passo">Primeiro Passo</string>
+
+    <string name="quest_title">Questionário</string>
+    <string name="quest_sexo">Sexo:</string>
+    <string name="quest_idade">Idade:</string>
+    <string name="quest_altura">Altura:</string>
+    <string name="quest_peso">Peso:</string>
+    <string name="quest_perg_cans">Você se sente cansado, fatigado or sonolento durante o dia?</string>
+    <string name="quest_perg_acor">Você costuma acordar muitas vezes durante a noite?</string>
+    <string name="quest_perg_falta_ar">Você costuma acordar com falta de ar?</string>
+    <string name="quest_perg_medicacao">Você toma alguma medicação?</string>
+    <string name="quest_perg_pressao">Você tem pressão alta?</string>
+    <string name="title_activity_tela_questionario">TelaQuestionario</string>
+
 </resources>
