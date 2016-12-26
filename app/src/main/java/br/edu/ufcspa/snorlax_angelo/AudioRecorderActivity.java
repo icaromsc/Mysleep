@@ -4,26 +4,19 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StatFs;
 import android.os.SystemClock;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,14 +32,14 @@ import android.widget.Toast;
 
 import ufcspa.edu.br.sono_angelo_v2.R;
 
-public class AudioRecorder extends AppCompatActivity {
-    private long record_size = 20000; //1 minute
+public class AudioRecorderActivity extends AppCompatActivity {
+    private long record_size = 60000; //1 minute
     private static final int RECORDER_BPP = 16;
     private static final String AUDIO_RECORDER_FILE_EXT_WAV = ".wav";
     private static final String AUDIO_RECORDER_FOLDER = "Snore_angELO";
     private static final String AUDIO_RECORDER_TEMP_FILE = "record_temp.raw";
     private static final int RECORDER_SAMPLERATE = 44100;
-    boolean uploadingFile;
+    static boolean uploadingFile;
 
     String fileToBeUploaded;
     private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
@@ -130,7 +123,7 @@ public class AudioRecorder extends AppCompatActivity {
 
         switch (item.getItemId()){
             case R.id.action_gravacoes:
-                Toast.makeText(AudioRecorder.this, "Falta desenvolver...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AudioRecorderActivity.this, "Falta desenvolver...", Toast.LENGTH_SHORT).show();
                 Intent intent2 = new Intent(this, TelaQuestionario.class); //Cria intent detalhes
                 startActivity(intent2); //Ativa a nova intent
 
@@ -234,7 +227,7 @@ public class AudioRecorder extends AppCompatActivity {
             public void run() {
                 getAudioData();
             }
-        },"AudioRecorder Thread");
+        },"AudioRecorderActivity Thread");
 
         recordingThread.start();
 
@@ -290,7 +283,6 @@ public class AudioRecorder extends AppCompatActivity {
                                     Log.d("app", "uploading file...");
                                     fileToBeUploaded=filename;
                                     new UploadFileAsync().execute(fileToBeUploaded);
-                                    processingThread.sleep(60000); //wait a minute
 
 //                                }
 //                            });
@@ -304,13 +296,21 @@ public class AudioRecorder extends AppCompatActivity {
 //                    }
 ///
 //                    inAudioData.close();
-                    deleteTempFile(filename);
+                    //deleteTempFile(filename);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
                 fileToprocess = "";
+            }else{
+                Log.d("app", "tried to upload file but another file are being uploaded");
+            }
+
+            try{ //sleeps to try again
+                processingThread.sleep(20000); //wait a minute
+            }catch (Exception e) {
+                e.printStackTrace();
             }
 
         }
@@ -322,8 +322,8 @@ public class AudioRecorder extends AppCompatActivity {
         }
 */
         //Create final audio file
-        copyWaveFile(getFinalTempFilename(), getFilename());
-        deleteFinalTempFile();
+        //copyWaveFile(getFinalTempFilename(), getFilename());
+        //deleteFinalTempFile();
 
     }
 
@@ -504,7 +504,7 @@ public class AudioRecorder extends AppCompatActivity {
                 cronometro.start();
                 btn_gravacao.setText(getString(R.string.btn_parar));
                 txt_status.setText(getString(R.string.granvando));
-                Toast.makeText(AudioRecorder.this, "Gravação Iniciada!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AudioRecorderActivity.this, "Gravação Iniciada!", Toast.LENGTH_SHORT).show();
             }
             else{
                 AppLog.logString("Stop Recording");
