@@ -61,14 +61,6 @@ public class AudioRecorderActivity extends AppCompatActivity {
 
     String upLoadServerUri = "http://angelo.inf.ufrgs.br/snorlax/UploadToServer.php";
 
-
-    /**********  File Path *************/
-    final String uploadFilePath = "/mnt/sdcard/";
-    final String uploadFileName = "service_lifecycle.png";
-
-
-
-
     private Chronometer cronometro;
     private Button btn_gravacao;
     private TextView txt_status;
@@ -265,38 +257,21 @@ public class AudioRecorderActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //FileInputStream inAudioData = null;
-
         while (isProcessing){
             filename = listFilesFromDir();
+            try{ //sleeps to try again
+                processingThread.sleep(record_size); //wait a minute
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
             if (filename != null && !uploadingFile){ //exist a file to process
                 System.out.println("*** PROCESSANDO NOVO TEMP AUDIO");
                 try{
-
-                    //dialog = ProgressDialog.show(getApplicationContext(), "", "Uploading file...", true);
-//                    new Thread(new Runnable() {
-//                        public void run() {
-//                            runOnUiThread(new Runnable() {
-//                                public void run() {
-                                    //messageText.setText("uploading started.....");
-//                                    Toast.makeText(getApplicationContext(), "uploading started.....", Toast.LENGTH_SHORT).show();
                                     Log.d("app", "uploading file...");
                                     fileToBeUploaded=filename;
                                     new UploadFileAsync().execute(fileToBeUploaded);
 
-//                                }
-//                            });
-//                        }
-//                    }).start();
-
-
-
-                    //while(inAudioData.read(data) != -1){
-//                        audioFinal.write(data);
-//                    }
-///
-//                    inAudioData.close();
-                    //deleteTempFile(filename);
+//
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -307,24 +282,9 @@ public class AudioRecorderActivity extends AppCompatActivity {
                 Log.d("app", "tried to upload file but another file are being uploaded");
             }
 
-            try{ //sleeps to try again
-                processingThread.sleep(20000); //wait a minute
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
+
 
         }
-
-        /*try{
-            //audioFinal.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
-        //Create final audio file
-        //copyWaveFile(getFinalTempFilename(), getFilename());
-        //deleteFinalTempFile();
-
     }
 
     private String writeAudioDataToFile(long record_size){
