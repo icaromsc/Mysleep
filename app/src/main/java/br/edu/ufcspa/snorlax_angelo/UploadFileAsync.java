@@ -28,7 +28,7 @@ class UploadFileAsync extends AsyncTask<String, Void, String> {
             String boundary = "*****";
             int bytesRead, bytesAvailable, bufferSize;
             byte[] buffer;
-            int maxBufferSize = 1 * 1024 * 1024;
+            int maxBufferSize = 10 * 1024 * 1024;
             File sourceFile = new File(sourceFileUri);
             int serverResponseCode;
 
@@ -73,9 +73,9 @@ class UploadFileAsync extends AsyncTask<String, Void, String> {
 
                     // read file and write it into form...
                     bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
+                    Log.d("app", "uploading file...");
                     while (bytesRead > 0) {
-                        Log.d("-while (bytesRead > 0)", " ");
+                       // Log.d("-while (bytesRead > 0)", " ");
                         dos.write(buffer, 0, bufferSize);
                         bytesAvailable = fileInputStream.available();
                         bufferSize = Math
@@ -154,7 +154,7 @@ class UploadFileAsync extends AsyncTask<String, Void, String> {
         File file = new File(filename);
         try {
             boolean v=file.getCanonicalFile().delete();
-            Log.w("Delete Check", "File deleted: " + file +" state:" + v);
+            Log.w("app", "File deleted: " + file +" state:" + v);
         } catch (IOException e) {
             e.printStackTrace();
         }

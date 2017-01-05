@@ -17,6 +17,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,6 +56,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
     private boolean isRecording = false;
     private boolean isProcessing = false;
     String fileToprocess = "";
+    private int tempNumber=0;
 
 
     int serverResponseCode = 0;
@@ -158,13 +161,22 @@ public class AudioRecorderActivity extends AppCompatActivity {
         if(!file.exists()){
             file.mkdirs();
         }
-
-        File tempFile = new File(filepath,System.currentTimeMillis()+".raw");
+        String filename=createFilename();
+        File tempFile = new File(filepath,filename+".raw");
 
         if(tempFile.exists())
             tempFile.delete();
 
-        return (file.getAbsolutePath() + "/" + System.currentTimeMillis()+".raw");
+        return (file.getAbsolutePath() + "/" + filename+".raw");
+    }
+
+    private String createFilename(){
+        tempNumber++;
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = sdf.format(c.getTime());
+        strDate+="_temp_"+tempNumber;
+        return strDate;
     }
 
     private String listFilesFromDir(){
@@ -174,11 +186,10 @@ public class AudioRecorderActivity extends AppCompatActivity {
         File file[] = f.listFiles();
         try{
             if(file!=null && file.length>0) {
-                Log.d("Files", "Size: " + file.length);
                 for (int i=0;i<file.length;i++){
-                    Log.d("Files", "File in dir: " +file[i].getName());
+                    Log.d("app", "File in dir: " +file[i].getName() + "  Size: " + file.length);
                 }
-                return path+file[file.length-1].getName();
+                return path+file[0].getName();
 
             }
         }catch (Exception e){
@@ -245,7 +256,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
 
     private void processAudioData(){
 
-//        Create final processed audio file
+/*       Create final processed audio file
         FileOutputStream audioFinal = null;
         filename = getFinalTempFilename();
 
@@ -255,7 +266,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        } */
 
         while (isProcessing){
             filename = listFilesFromDir();
@@ -278,8 +289,10 @@ public class AudioRecorderActivity extends AppCompatActivity {
                 }
 
                 fileToprocess = "";
-            }else{
+            }else if(!uploadingFile){
                 Log.d("app", "tried to upload file but another file are being uploaded");
+            }else{
+                Log.d("app", "there is no files to be uploaded");
             }
 
 
@@ -304,7 +317,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
 
         int read = 0;
 
-        System.out.println("*** INICIANDO GRAVAÇÃO");
+        Log.d("app","*** INICIANDO GRAVAÇÃO");
         if(null != os){
             minuteIni = cronometro.getDrawingTime();
             while(isRecording && limiteTime){
@@ -315,7 +328,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
 
                         minuteAtu = cronometro.getDrawingTime();
                         if ((minuteAtu - minuteIni) > record_size){
-                            System.out.println("*** UM MINUTO: " + cronometro.getDrawingTime());
+                            Log.d("app","*** UM MINUTO: " + cronometro.getDrawingTime());
                             limiteTime = false;
                         }
                         else{
