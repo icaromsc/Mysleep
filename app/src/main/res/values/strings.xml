@@ -5,7 +5,7 @@
     <string name="action_gravacoes">Gravações</string>
 
     <string name="avancar">AVANÇAR</string>
-    <string name="btn_inicar">INICIAR</string>
+    <string name="btn_start">Start</string>
     <string name="btn_parar">PARAR</string>
     <string name="granvando">CAPTURANDO ÁUDIO...</string>
     <string name="inicar_captura">CAPTURAR ÁUDIO</string>

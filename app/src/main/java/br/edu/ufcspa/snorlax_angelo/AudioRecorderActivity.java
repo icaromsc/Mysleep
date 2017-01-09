@@ -84,6 +84,22 @@ public class AudioRecorderActivity extends AppCompatActivity {
 
         cronometro = (Chronometer) findViewById(R.id.cronometro);
 
+
+        // teste do cronometro
+        cronometro.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
+            @Override
+            public void onChronometerTick(Chronometer cArg) {
+                long time = SystemClock.elapsedRealtime() - cArg.getBase();
+                int h   = (int)(time /3600000);
+                int m = (int)(time - h*3600000)/60000;
+                int s= (int)(time - h*3600000- m*60000)/1000 ;
+                String hh = h < 10 ? "0"+h: h+"";
+                String mm = m < 10 ? "0"+m: m+"";
+                String ss = s < 10 ? "0"+s: s+"";
+                cArg.setText(hh+":"+mm+":"+ss);
+            }
+        });
+
         btn_gravacao = ((Button)findViewById(R.id.btn_gravacao));
         btn_gravacao.setOnClickListener(btnClick);
 
@@ -100,9 +116,6 @@ public class AudioRecorderActivity extends AppCompatActivity {
             }
         });                                      //:)
         alerta = builder.create();
-
-        txt_cap2 = ((TextView)findViewById(R.id.txt_cap2));
-        txt_cap2.setText("  " + calculaCapHoras()+" horas");
 
     }
 
@@ -488,7 +501,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
 
                 cronometro.setBase(SystemClock.elapsedRealtime());
 
-                btn_gravacao.setText(getString(R.string.btn_inicar));
+                btn_gravacao.setText(getString(R.string.btn_start));
                 txt_status.setText(getString(R.string.inicar_captura));
 
             }
