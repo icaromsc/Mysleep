@@ -489,7 +489,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
                 cronometro.setBase(SystemClock.elapsedRealtime());
                 cronometro.start();
                 btn_gravacao.setText(getString(R.string.btn_parar));
-                txt_status.setText(getString(R.string.granvando));
+                txt_status.setText(getString(R.string.recording));
                 Toast.makeText(AudioRecorderActivity.this, "Gravação Iniciada!", Toast.LENGTH_SHORT).show();
             }
             else{
@@ -502,7 +502,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
                 cronometro.setBase(SystemClock.elapsedRealtime());
 
                 btn_gravacao.setText(getString(R.string.btn_start));
-                txt_status.setText(getString(R.string.inicar_captura));
+                txt_status.setText(getString(R.string.start_capture));
 
             }
 

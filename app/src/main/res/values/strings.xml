@@ -7,8 +7,8 @@
     <string name="avancar">AVANÇAR</string>
     <string name="btn_start">Start</string>
     <string name="btn_parar">PARAR</string>
-    <string name="granvando">CAPTURANDO ÁUDIO...</string>
-    <string name="inicar_captura">CAPTURAR ÁUDIO</string>
+    <string name="recording">Recording</string>
+    <string name="start_capture">start recording</string>
     <string name="capacidade">Capacidade Máx.:</string>
     <string name="title_activity_primeiro_passo">Primeiro Passo</string>
 
@@ -23,5 +23,11 @@
     <string name="quest_perg_medicacao">Você toma alguma medicação?</string>
     <string name="quest_perg_pressao">Você tem pressão alta?</string>
     <string name="title_activity_tela_questionario">TelaQuestionario</string>
+    <string name="title_activity_aplication">Menu principal</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 
 </resources>
