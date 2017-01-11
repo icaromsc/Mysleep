@@ -13,4 +13,14 @@
     tools:context="br.edu.ufcspa.snorlax_angelo.Aplication"
     tools:showIn="@layout/app_bar_aplication">
 
+
+    <FrameLayout
+        android:id="@+id/frame_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        >
+
+    </FrameLayout>
 </RelativeLayout>

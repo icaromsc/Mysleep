@@ -1,8 +1,10 @@
 package br.edu.ufcspa.snorlax_angelo;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,11 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import ufcspa.edu.br.sono_angelo_v2.R;
 
 public class Aplication extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    FrameLayout content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +28,7 @@ public class Aplication extends AppCompatActivity
         setContentView(R.layout.activity_aplication);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        content=(FrameLayout) findViewById(R.id.frame_content);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -72,10 +77,13 @@ public class Aplication extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        FragmentManager fragmentManager= getFragmentManager();
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+          fragmentManager.beginTransaction().replace(R.id.frame_content, new RecordFragment()).commit();
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
