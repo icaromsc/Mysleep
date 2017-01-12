@@ -39,6 +39,12 @@ public class Aplication extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        if (getFragmentManager().findFragmentById(R.id.frame_content) == null) {
+            FragmentManager fragmentManager= getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.frame_content, new InitFragment()).commit();
+        }
     }
 
     @Override
@@ -67,7 +73,10 @@ public class Aplication extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            FragmentManager fragmentManager= getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.frame_content, new AboutFragment()).commit();
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -80,21 +89,20 @@ public class Aplication extends AppCompatActivity
         FragmentManager fragmentManager= getFragmentManager();
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_record) {
             // Handle the camera action
           fragmentManager.beginTransaction().replace(R.id.frame_content, new RecordFragment()).commit();
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_report) {
+            fragmentManager.beginTransaction().replace(R.id.frame_content, new ReportFragment()).commit();
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
+        }  else if (id == R.id.nav_settings) {
+            fragmentManager.beginTransaction().replace(R.id.frame_content, new SettingsFragment()).commit();
+        } /*else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -14,15 +14,15 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="130dp"
-        android:layout_height="102dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
 
-        android:src="@drawable/mysleep"
+        android:src="@drawable/mysleep_icon"
         android:layout_gravity="center"
         android:layout_weight="0.40"
-        />
-
+        android:layout_marginTop="5dp" />
+    <!--
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,5 +37,7 @@
         android:layout_height="wrap_content"
         android:textColor="#D6FFF6"
         android:text="android.studio@android.com" />
+
+     -->
 
 </LinearLayout>

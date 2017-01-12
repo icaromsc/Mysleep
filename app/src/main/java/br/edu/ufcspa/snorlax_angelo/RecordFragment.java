@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -19,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.File;
@@ -73,9 +76,10 @@ public class RecordFragment extends Fragment {
 
     private AlertDialog alerta;
     private AlertDialog.Builder builder;
+    private RelativeLayout recording_message;
+    private SeekBar seekBar;
 
-
-
+    View myView;
 
 
 
@@ -115,20 +119,55 @@ public class RecordFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        return inflater.inflate(R.layout.fragment_record, container, false);
-
+        myView= inflater.inflate(R.layout.fragment_record, container, false);
+        return myView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,RECORDER_CHANNELS,RECORDER_AUDIO_ENCODING);
-
+        recording_message = (RelativeLayout) myView.findViewById(R.id.record_message_layout);
         cronometro = (Chronometer) getView().findViewById(R.id.cronometro);
 
+        /*seekBar = (SeekBar) myView.findViewById(R.id.seekbar_stop_recording);
 
+
+
+
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                if (seekBar.getProgress() > 95) {
+
+                } else {
+
+                    seekBar.setThumb(getResources().getDrawable(R.drawable.mysleep_icon));
+                }
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+                if(progress>95){
+                    seekBar.setThumb(getResources().getDrawable(R.mipmap.snore));
+                }
+
+            }
+        });
+*/
         // teste do cronometro
-        cronometro.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
+       /* cronometro.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
             @Override
             public void onChronometerTick(Chronometer cArg) {
                 long time = SystemClock.elapsedRealtime() - cArg.getBase();
@@ -140,7 +179,7 @@ public class RecordFragment extends Fragment {
                 String ss = s < 10 ? "0"+s: s+"";
                 cArg.setText(hh+":"+mm+":"+ss);
             }
-        });
+        });*/
 
         btn_gravacao = ((Button) getView().findViewById(R.id.btn_gravacao));
         btn_gravacao.setOnClickListener(btnClick);
@@ -168,16 +207,16 @@ public class RecordFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+//    }
 
     @Override
     public void onDetach() {
@@ -206,16 +245,21 @@ public class RecordFragment extends Fragment {
         public void onClick(View v) {
 
             if(!isRecording) {
+                if(getActivity()!=null) {
+                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
                 AppLog.logString("Start Recording");
+                recording_message.setVisibility(View.VISIBLE);
                 startRecording();
                 cronometro.setBase(SystemClock.elapsedRealtime());
                 cronometro.start();
-                btn_gravacao.setText(getString(R.string.btn_parar));
+                btn_gravacao.setText(getString(R.string.btn_stop));
                 txt_status.setText(getString(R.string.recording));
                 Toast.makeText(getView().getContext(), "Gravação Iniciada!", Toast.LENGTH_SHORT).show();
             }
             else{
                 AppLog.logString("Stop Recording");
+                recording_message.setVisibility(View.INVISIBLE);
                 stopRecording();
                 cronometro.stop();
 
@@ -225,7 +269,7 @@ public class RecordFragment extends Fragment {
 
                 btn_gravacao.setText(getString(R.string.btn_start));
                 txt_status.setText(getString(R.string.start_capture));
-
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
             }
 
         }
@@ -553,6 +597,9 @@ public class RecordFragment extends Fragment {
 
         out.write(header, 0, 44);
     }
+
+
+
 
 
 

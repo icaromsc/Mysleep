@@ -488,7 +488,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
                 startRecording();
                 cronometro.setBase(SystemClock.elapsedRealtime());
                 cronometro.start();
-                btn_gravacao.setText(getString(R.string.btn_parar));
+                btn_gravacao.setText(getString(R.string.btn_stop));
                 txt_status.setText(getString(R.string.recording));
                 Toast.makeText(AudioRecorderActivity.this, "Gravação Iniciada!", Toast.LENGTH_SHORT).show();
             }

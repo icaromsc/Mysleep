@@ -7,28 +7,29 @@
     android:background="@color/colorBackground"
     tools:context="br.edu.ufcspa.snorlax_angelo.Aplication">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.20"
-        android:textSize="20dip" />
+
 
     <Chronometer
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="90sp"
+        android:textSize="60sp"
         android:id="@+id/cronometro"
         android:textAlignment="center"
         android:gravity="center|clip_vertical"
         android:fontFamily="sans-serif-thin"
         android:textColor="@color/record"
-        android:layout_weight="0.10" />
+        android:layout_weight="0.10"
+        android:layout_marginTop="20dp"
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="0.40">
+        android:layout_weight="0.40"
+        android:visibility="invisible"
+        android:id="@+id/record_message_layout"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -65,5 +66,21 @@
         android:background="@color/record"
         android:textSize="@dimen/abc_action_bar_progress_bar_size"
         />
+    <!--
+     this is a comment
+
+
+     <SeekBar
+        android:id="@+id/seekbar_stop_recording"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:max="100"
+        android:progressDrawable="@android:color/transparent"
+        android:thumb="@drawable/mysleep_icon" />
+
+
+ -->
+
 
 </LinearLayout>

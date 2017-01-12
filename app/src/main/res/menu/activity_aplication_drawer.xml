@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/nav_record"
+            android:icon="@android:drawable/ic_btn_speak_now"
+            android:title="Record" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/nav_report"
+            android:icon="@android:drawable/ic_menu_sort_by_size"
+            android:title="Reports" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="Settings" />
     </group>
 
-    <item android:title="Communicate">
+    <!--
+      <item android:title="Communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
@@ -32,5 +30,6 @@
                 android:title="Send" />
         </menu>
     </item>
+  -->
 
 </menu>

@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.edu.ufcspa.snorlax_angelo.InitFragment"
+    android:background="@color/colorBackground"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome"
+        android:textSize="20sp"
+
+        android:textColor="@color/pallete_white"
+        android:gravity="center" />
+
+</LinearLayout>
