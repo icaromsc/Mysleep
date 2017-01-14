@@ -8,6 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="darkTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:background">@color/colorBackground</item>
+    </style>
+
+
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+            <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
+
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
