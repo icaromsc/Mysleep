@@ -57,6 +57,7 @@
             android:layout_weight="0.15"
             android:padding="10dp"
             android:paddingBottom="10dp"
+            android:onClick="onGmLogin"
             />
 
     <ImageButton
@@ -72,7 +73,7 @@
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        />
+         />
 
 
     <ImageView
