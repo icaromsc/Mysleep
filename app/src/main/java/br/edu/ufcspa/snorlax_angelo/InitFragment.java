@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import ufcspa.edu.br.sono_angelo_v2.R;
+import ufcspa.edu.br.snorlax_angelo.R;
 
 
 /**

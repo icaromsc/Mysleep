@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import ufcspa.edu.br.sono_angelo_v2.R;
+import ufcspa.edu.br.snorlax_angelo.R;
 
 public class MainActivity extends AppCompatActivity {
 

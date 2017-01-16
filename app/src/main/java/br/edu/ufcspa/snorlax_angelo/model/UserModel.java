@@ -13,6 +13,7 @@ public class UserModel implements Parcelable {
     public String profilePic;
     public String gender;
 
+
     public static final Creator<UserModel> CREATOR = new Creator<UserModel>() {
 
         @Override

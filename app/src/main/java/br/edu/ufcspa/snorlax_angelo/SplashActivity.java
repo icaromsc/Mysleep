@@ -19,7 +19,7 @@ public class SplashActivity extends AppCompatActivity {
 
         /*UserModel userModel = SharedPreferenceManager.getSharedInstance().getUserModelFromPreferences();
         if(userModel!=null) {
-            Intent intent = new Intent(this, Aplication.class);
+            Intent intent = new Intent(this, HomeActivity.class);
             intent.putExtra(UserModel.class.getSimpleName(), userModel);
             startActivity(intent);
             finishAffinity();

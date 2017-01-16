@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorBackground"
     android:gravity="bottom"
     android:orientation="vertical"
@@ -13,6 +14,7 @@
     android:weightSum="1">
 
     <ImageView
+        android:layout_margin="10dp"
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,19 +25,29 @@
         android:layout_weight="0.40"
         android:layout_marginTop="5dp" />
 
+   <!-- <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/user_imageview"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        fresco:actualImageScaleType="focusCrop"
+        fresco:roundAsCircle="true"
+        android:layout_marginTop="10dp"
+        />!-->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="Android Studio"
+        android:id="@+id/txtViewNameUser"
         android:textColor="#D6FFF6"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#D6FFF6"
+        android:id="@+id/txtViewEmailUser"
         android:text="android.studio@android.com" />
 
 

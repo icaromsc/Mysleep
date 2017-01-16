@@ -4,20 +4,18 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
-import com.facebook.FacebookSdk;
-
 import br.edu.ufcspa.snorlax_angelo.managers.SharedPreferenceManager;
 
 /**
  * Created by Icarus on 14/01/2017.
  */
 
-public class App extends Aplication implements Application.ActivityLifecycleCallbacks {
+public class App extends Application implements Application.ActivityLifecycleCallbacks {
 
 
 
     public void onCreate() {
-        super.onCreate(Bundle.EMPTY);
+        super.onCreate();
         instantiateManagers();
     }
 

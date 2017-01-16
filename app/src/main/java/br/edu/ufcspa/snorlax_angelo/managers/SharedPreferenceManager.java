@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import br.edu.ufcspa.snorlax_angelo.constants.AppConstants;
 import br.edu.ufcspa.snorlax_angelo.model.UserModel;
-import ufcspa.edu.br.sono_angelo_v2.R;
+import ufcspa.edu.br.snorlax_angelo.R;
 
 
 public class SharedPreferenceManager {

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ufcspa.edu.br.sono_angelo_v2">
+    package="ufcspa.edu.br.snorlax_angelo">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <application
+        android:name="br.edu.ufcspa.snorlax_angelo.App"
         android:allowBackup="true"
         android:icon="@mipmap/new_icon"
         android:label="@string/app_name"
@@ -20,7 +23,7 @@
             android:label="@string/title_activity_tela_questionario"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="br.edu.ufcspa.snorlax_angelo.Aplication"
+            android:name="br.edu.ufcspa.snorlax_angelo.HomeActivity"
             android:label="@string/title_activity_aplication"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>

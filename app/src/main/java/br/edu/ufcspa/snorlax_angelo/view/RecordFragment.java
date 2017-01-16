@@ -33,7 +33,7 @@ import java.util.Calendar;
 
 import br.edu.ufcspa.snorlax_angelo.AppLog;
 import br.edu.ufcspa.snorlax_angelo.view.UploadFileAsync;
-import ufcspa.edu.br.sono_angelo_v2.R;
+import ufcspa.edu.br.snorlax_angelo.R;
 
 
 

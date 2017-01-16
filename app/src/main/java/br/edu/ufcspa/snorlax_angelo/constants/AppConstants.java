@@ -23,5 +23,5 @@ public class AppConstants {
     }
 
 
-    public static final String GOOGLE_CLIENT_ID = "AIzaSyB57PDWPwjE6Rm6rjq2f7wZZk72Cn1f1T4";
+    public static final String GOOGLE_CLIENT_ID = "571633894749-pgbjhk84qn8vi42d2v16gimlhg3d407a.apps.googleusercontent.com";
 }

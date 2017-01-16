@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorBackground"
-    tools:context="br.edu.ufcspa.snorlax_angelo.Aplication">
+    tools:context="br.edu.ufcspa.snorlax_angelo.HomeActivity">
 
     <TextView
         android:layout_width="fill_parent"

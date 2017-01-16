@@ -35,7 +35,7 @@ import android.widget.Toast;
 import br.edu.ufcspa.snorlax_angelo.AppLog;
 import br.edu.ufcspa.snorlax_angelo.TelaQuestionario;
 import br.edu.ufcspa.snorlax_angelo.view.UploadFileAsync;
-import ufcspa.edu.br.sono_angelo_v2.R;
+import ufcspa.edu.br.snorlax_angelo.R;
 
 public class AudioRecorderActivity extends AppCompatActivity {
     private long record_size = 60000; //1 minute

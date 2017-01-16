@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/colorBackground"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="br.edu.ufcspa.snorlax_angelo.Aplication"
+    tools:context="br.edu.ufcspa.snorlax_angelo.HomeActivity"
     tools:showIn="@layout/app_bar_aplication">
 
 

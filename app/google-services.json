@@ -1,0 +1,79 @@
+{
+  "project_info": {
+    "project_number": "571633894749",
+    "project_id": "firebase-mysleep"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571633894749:android:e93116636e2710f0",
+        "android_client_info": {
+          "package_name": "br.edu.snorlax_angelo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571633894749-pgbjhk84qn8vi42d2v16gimlhg3d407a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6aSDR9PGNb1nZEjOhKKhTBSzOGmECFiM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571633894749:android:5aac3ba5e7000f2c",
+        "android_client_info": {
+          "package_name": "br.edu.ufcspa.snorlax_angelo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571633894749-l1tqj13nfdsk5eq5febtvevm7c9vg3jn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.edu.ufcspa.snorlax_angelo",
+            "certificate_hash": "D1044E158728B40A73F4FCFA0FFC936BCA15525A"
+          }
+        },
+        {
+          "client_id": "571633894749-pgbjhk84qn8vi42d2v16gimlhg3d407a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6aSDR9PGNb1nZEjOhKKhTBSzOGmECFiM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
