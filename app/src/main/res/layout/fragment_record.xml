@@ -7,7 +7,16 @@
     android:background="@color/colorBackground"
     tools:context="br.edu.ufcspa.snorlax_angelo.Aplication">
 
-
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:id="@+id/imgrec"
+        android:background="@drawable/icone_microfone"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:layout_toLeftOf="@+id/txt_status"
+        android:layout_toStartOf="@+id/txt_status" />
 
     <Chronometer
         android:layout_width="fill_parent"

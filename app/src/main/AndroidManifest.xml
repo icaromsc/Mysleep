@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name="br.edu.ufcspa.snorlax_angelo.AudioRecorderActivity"
+            android:name="br.edu.ufcspa.snorlax_angelo.view.AudioRecorderActivity"
             android:label="@string/app_name"></activity>
         <activity
             android:name="br.edu.ufcspa.snorlax_angelo.TelaQuestionario"

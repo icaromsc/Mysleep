@@ -2,10 +2,7 @@ package br.edu.ufcspa.snorlax_angelo;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import br.edu.ufcspa.snorlax_angelo.view.RecordFragment;
 import ufcspa.edu.br.sono_angelo_v2.R;
 
 public class Aplication extends AppCompatActivity

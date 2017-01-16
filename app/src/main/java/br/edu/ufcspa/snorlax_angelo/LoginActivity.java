@@ -164,19 +164,27 @@ public class LoginActivity extends AppCompatActivity implements FbConnectHelper.
     public void onClick(View v) {
         Log.d(TAG,"evento de clique no onClick");
         if(v.getId()==R.id.login_google){
-            gSignInHelper.signIn(this);
-            setBackground(R.color.g_color);
+            //gSignInHelper.signIn(this);
+            //setBackground(R.color.g_color);
+            Intent intent = new Intent(this, Aplication.class);
+            startActivity(intent);
         }else if(v.getId()==R.id.login_facebook){
-            fbConnectHelper.connect();
-            setBackground(R.color.fb_color);
+
+            Intent intent = new Intent(this, Aplication.class);
+            startActivity(intent);
+            //fbConnectHelper.connect();
+            //setBackground(R.color.fb_color);
         }
     }
 
 
     public void onGmLogin(View v){
         Log.d(TAG,"evento de clique no onGm");
-        gSignInHelper.signIn(this);
-        setBackground(R.color.g_color);
+        Intent intent = new Intent(this, Aplication.class);
+        startActivity(intent);
+
+        //gSignInHelper.signIn(this);
+        //setBackground(R.color.g_color);
     }
 
 

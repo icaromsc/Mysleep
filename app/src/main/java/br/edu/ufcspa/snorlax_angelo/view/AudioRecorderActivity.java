@@ -1,29 +1,17 @@
-package br.edu.ufcspa.snorlax_angelo;
+package br.edu.ufcspa.snorlax_angelo.view;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.ActivityInfo;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.StatFs;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Chronometer;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,14 +20,24 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import android.view.Menu;
+import android.view.MenuItem;
+
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
+import android.os.Environment;
+import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import br.edu.ufcspa.snorlax_angelo.AppLog;
+import br.edu.ufcspa.snorlax_angelo.TelaQuestionario;
+import br.edu.ufcspa.snorlax_angelo.view.UploadFileAsync;
 import ufcspa.edu.br.sono_angelo_v2.R;
 
-
-
-
-public class RecordFragment extends Fragment {
-
-
+public class AudioRecorderActivity extends AppCompatActivity {
     private long record_size = 60000; //1 minute
     private static final int RECORDER_BPP = 16;
     private static final String AUDIO_RECORDER_FILE_EXT_WAV = ".wav";
@@ -76,98 +74,22 @@ public class RecordFragment extends Fragment {
 
     private AlertDialog alerta;
     private AlertDialog.Builder builder;
-    private RelativeLayout recording_message;
-    private SeekBar seekBar;
-
-    View myView;
-
-
-
-
-
-
-
-
-
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-
-    public RecordFragment() {
-        // Required empty public constructor
-    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+        setContentView(R.layout.activity_audio_recorder);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        myView= inflater.inflate(R.layout.fragment_record, container, false);
-        return myView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,RECORDER_CHANNELS,RECORDER_AUDIO_ENCODING);
-        recording_message = (RelativeLayout) myView.findViewById(R.id.record_message_layout);
-        cronometro = (Chronometer) getView().findViewById(R.id.cronometro);
 
-        /*seekBar = (SeekBar) myView.findViewById(R.id.seekbar_stop_recording);
+        cronometro = (Chronometer) findViewById(R.id.cronometro);
 
 
-
-
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-                if (seekBar.getProgress() > 95) {
-
-                } else {
-
-                    seekBar.setThumb(getResources().getDrawable(R.drawable.mysleep_icon));
-                }
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,
-                                          boolean fromUser) {
-                if(progress>95){
-                    seekBar.setThumb(getResources().getDrawable(R.mipmap.snore));
-                }
-
-            }
-        });
-*/
         // teste do cronometro
-       /* cronometro.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
+        cronometro.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
             @Override
             public void onChronometerTick(Chronometer cArg) {
                 long time = SystemClock.elapsedRealtime() - cArg.getBase();
@@ -179,14 +101,14 @@ public class RecordFragment extends Fragment {
                 String ss = s < 10 ? "0"+s: s+"";
                 cArg.setText(hh+":"+mm+":"+ss);
             }
-        });*/
+        });
 
-        btn_gravacao = ((Button) getView().findViewById(R.id.btn_gravacao));
+        btn_gravacao = ((Button)findViewById(R.id.btn_gravacao));
         btn_gravacao.setOnClickListener(btnClick);
 
-        txt_status = ((TextView)getView().findViewById(R.id.txt_status));
+        txt_status = ((TextView)findViewById(R.id.txt_status));
 
-        builder = new AlertDialog.Builder(getView().getContext());
+        builder = new AlertDialog.Builder(this);
         builder.setTitle("Snore | angELO");
         builder.setMessage("Gravação finalizada e salva na pasta Snore_angELO!");
         builder.setCancelable(false);
@@ -200,80 +122,42 @@ public class RecordFragment extends Fragment {
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_audio_recorder, menu);
+        return true;
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+
+        switch (item.getItemId()){
+            case R.id.action_gravacoes:
+                Toast.makeText(AudioRecorderActivity.this, "Falta desenvolver...", Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(this, TelaQuestionario.class); //Cria intent detalhes
+                startActivity(intent2); //Ativa a nova intent
+
+            /*case R.id.action_grafico:
+                Intent intent2 = new Intent(this, TelaGrafico.class); //Cria intent detalhes
+                startActivity(intent2); //Ativa a nova intent
+                return true;*/
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void onResume() {
+        super.onResume();
+        //txt_cap2.setText("  " + calculaCapHoras() + " horas");
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    private void enableButton(int id,boolean isEnable){
+        ((Button)findViewById(id)).setEnabled(isEnable);
     }
-
-
-    private View.OnClickListener btnClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-            if(!isRecording) {
-                if(getActivity()!=null) {
-                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                }
-                AppLog.logString("Start Recording");
-                recording_message.setVisibility(View.VISIBLE);
-                startRecording();
-                cronometro.setBase(SystemClock.elapsedRealtime());
-                cronometro.start();
-                btn_gravacao.setText(getString(R.string.btn_stop));
-                txt_status.setText(getString(R.string.recording));
-                Toast.makeText(getView().getContext(), "Gravação Iniciada!", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                AppLog.logString("Stop Recording");
-                recording_message.setVisibility(View.INVISIBLE);
-                stopRecording();
-                cronometro.stop();
-
-                alerta.show();
-
-                cronometro.setBase(SystemClock.elapsedRealtime());
-
-                btn_gravacao.setText(getString(R.string.btn_start));
-                txt_status.setText(getString(R.string.start_capture));
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-            }
-
-        }
-    };
 
     private String getFilename(){
         String filepath = Environment.getExternalStorageDirectory().getPath();
@@ -410,9 +294,9 @@ public class RecordFragment extends Fragment {
             if (filename != null && !uploadingFile){ //exist a file to process
                 System.out.println("*** PROCESSANDO NOVO TEMP AUDIO");
                 try{
-                    Log.d("app", "uploading file...");
-                    fileToBeUploaded=filename;
-                    new UploadFileAsync().execute(fileToBeUploaded);
+                                    Log.d("app", "uploading file...");
+                                    fileToBeUploaded=filename;
+                                    new UploadFileAsync().execute(fileToBeUploaded);
 
 //
 
@@ -597,6 +481,57 @@ public class RecordFragment extends Fragment {
 
         out.write(header, 0, 44);
     }
+
+    private View.OnClickListener btnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            if(!isRecording) {
+                AppLog.logString("Start Recording");
+                startRecording();
+                cronometro.setBase(SystemClock.elapsedRealtime());
+                cronometro.start();
+                btn_gravacao.setText(getString(R.string.btn_stop));
+                txt_status.setText(getString(R.string.recording));
+                Toast.makeText(AudioRecorderActivity.this, "Gravação Iniciada!", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                AppLog.logString("Stop Recording");
+                stopRecording();
+                cronometro.stop();
+
+                alerta.show();
+
+                cronometro.setBase(SystemClock.elapsedRealtime());
+
+                btn_gravacao.setText(getString(R.string.btn_start));
+                txt_status.setText(getString(R.string.start_capture));
+
+            }
+
+        }
+    };
+
+    public static float megabytesAvailable() {
+        StatFs stat = new StatFs(Environment.getDataDirectory().getPath());
+        long bytesAvailable = (long)stat.getBlockSize() * (long)stat.getAvailableBlocks();
+        return bytesAvailable / (1024.f * 1024.f);
+    }
+
+    public static float bytesAvailable() {
+        StatFs stat = new StatFs(Environment.getDataDirectory().getPath());
+        long bytesAvailable = (long)stat.getBlockSize() * (long)stat.getAvailableBlocks();
+        return bytesAvailable;
+    }
+
+    public static int calculaCapHoras() {
+        int horas = 0;
+        horas = (int)Math.floor((bytesAvailable()/BYTES_HORA));
+        return horas;
+    }
+
+
+
 
 
 

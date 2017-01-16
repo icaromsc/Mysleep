@@ -1,4 +1,4 @@
-package br.edu.ufcspa.snorlax_angelo;
+package br.edu.ufcspa.snorlax_angelo.view;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -9,6 +9,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import br.edu.ufcspa.snorlax_angelo.view.AudioRecorderActivity;
 
 /**
  * Created by Carlos on 03/10/2016.
