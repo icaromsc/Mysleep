@@ -9,12 +9,17 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <application
+
+
         android:name="br.edu.ufcspa.snorlax_angelo.App"
         android:allowBackup="true"
-        android:icon="@mipmap/new_icon"
+        android:icon="@mipmap/mysleep_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme.NoActionBar"
+
+
+        >
         <activity
             android:name="br.edu.ufcspa.snorlax_angelo.view.AudioRecorderActivity"
             android:label="@string/app_name"></activity>
@@ -41,6 +46,13 @@
         </activity>
 
 
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
     </application>
 
 </manifest>

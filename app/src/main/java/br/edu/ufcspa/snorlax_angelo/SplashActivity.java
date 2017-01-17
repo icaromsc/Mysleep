@@ -17,7 +17,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*UserModel userModel = SharedPreferenceManager.getSharedInstance().getUserModelFromPreferences();
+        UserModel userModel = SharedPreferenceManager.getSharedInstance().getUserModelFromPreferences();
         if(userModel!=null) {
             Intent intent = new Intent(this, HomeActivity.class);
             intent.putExtra(UserModel.class.getSimpleName(), userModel);
@@ -28,9 +28,9 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-*/
-        Intent intent = new Intent(this, LoginActivity.class);
+
+        /*Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-        finish();
+        finish();*/
     }
 }

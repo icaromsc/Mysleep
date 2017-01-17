@@ -73,7 +73,7 @@ public class FragmentLogin extends Fragment implements FbConnectHelper.OnFbSignI
         gSignInHelper = GooglePlusSignInHelper.getInstance();
         gSignInHelper.initialize(getActivity(), this);
 
-        //fbConnectHelper = new FbConnectHelper(this,this);
+        fbConnectHelper = new FbConnectHelper(this,this);
         //twitterConnectHelper = new TwitterConnectHelper(getActivity(), this);
     }
 
@@ -117,7 +117,7 @@ public class FragmentLogin extends Fragment implements FbConnectHelper.OnFbSignI
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //fbConnectHelper.onActivityResult(requestCode, resultCode, data);
+        fbConnectHelper.onActivityResult(requestCode, resultCode, data);
         gSignInHelper.onActivityResult(requestCode, resultCode, data);
         //twitterConnectHelper.onActivityResult(requestCode, resultCode, data);
     }

@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.facebook.FacebookSdk;
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import br.edu.ufcspa.snorlax_angelo.managers.SharedPreferenceManager;
 
 /**
@@ -23,8 +26,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
      * Method to instantiate all the managers in this app
      */
     private void instantiateManagers() {
-        //FacebookSdk.sdkInitialize(this);
-        //Fresco.initialize(this);
+        FacebookSdk.sdkInitialize(this);
+        Fresco.initialize(this);
         SharedPreferenceManager.getSharedInstance().initiateSharedPreferences(getApplicationContext());
     }
 
