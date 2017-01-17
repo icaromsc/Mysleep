@@ -31,13 +31,13 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     FrameLayout content;
 
-    @Bind(R.id.nav_view)
+    //@Bind(R.id.nav_view)
     NavigationView navigationView;
 //    @Bind(R.id.user_imageview)
 //    SimpleDraweeView simpleDraweeView;
-    @Bind(R.id.txtViewNameUser)
+    //@Bind(R.id.txtViewNameUser)
     TextView nameTextView;
-    @Bind(R.id.txtViewEmailUser)
+    //@Bind(R.id.txtViewEmailUser)
     TextView emailTextView;
 
 
@@ -47,6 +47,8 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_aplication);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
+
         content=(FrameLayout) findViewById(R.id.frame_content);
 
 
@@ -55,8 +57,12 @@ public class HomeActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        nameTextView = (TextView) navigationView.findViewById(R.id.txtViewNameUser);
+        emailTextView=(TextView) navigationView.findViewById(R.id.txtViewEmailUser);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -64,10 +70,18 @@ public class HomeActivity extends AppCompatActivity
             FragmentManager fragmentManager= getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_content, new InitFragment()).commit();
         }
-
+        Log.d("app", " getting userModel");
         UserModel userModel = getUserModelFromIntent();
-        if(userModel!=null)
+        if(userModel!=null) {
+            Log.d("app", " get from intent");
             setDataOnNavigationView(userModel);
+        }else
+            userModel = SharedPreferenceManager.getSharedInstance().getUserModelFromPreferences();
+
+       /* Log.d("app"," user email:"+userModel.userEmail);
+        Log.d("app"," user name:"+userModel.userName);
+        nameTextView.setText("casa");
+        emailTextView.setText("casa@sasa");*/
 
     }
 
@@ -75,6 +89,8 @@ public class HomeActivity extends AppCompatActivity
         if (navigationView != null) {
             setupDrawerContent(userModel);
         }
+
+
 
         /*navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
