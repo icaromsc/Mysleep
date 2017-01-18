@@ -73,7 +73,7 @@ public class GooglePlusSignInHelper {
         private GooglePlusSignInHelper() {
             // Configure sign-in to request the user's ID, email address, and basic
             // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-            gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestId()
                     .requestScopes(new Scope(Scopes.PLUS_LOGIN))
                     .requestProfile() //for profile related info
                     .requestEmail() //for email

@@ -4,7 +4,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,10 +20,12 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
+
+import br.edu.ufcspa.snorlax_angelo.database.DataBaseAdapter;
 import br.edu.ufcspa.snorlax_angelo.managers.SharedPreferenceManager;
 import br.edu.ufcspa.snorlax_angelo.model.UserModel;
 import br.edu.ufcspa.snorlax_angelo.view.RecordFragment;
-import butterknife.Bind;
+import br.edu.ufcspa.snorlax_angelo.model.User;
 import butterknife.ButterKnife;
 import ufcspa.edu.br.snorlax_angelo.R;
 
@@ -33,8 +35,8 @@ public class HomeActivity extends AppCompatActivity
 
     //@Bind(R.id.nav_view)
     NavigationView navigationView;
-//    @Bind(R.id.user_imageview)
-//    SimpleDraweeView simpleDraweeView;
+    //@Bind(R.id.user_imageview)
+    SimpleDraweeView simpleDraweeView;
     //@Bind(R.id.txtViewNameUser)
     TextView nameTextView;
     //@Bind(R.id.txtViewEmailUser)
@@ -60,7 +62,7 @@ public class HomeActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         nameTextView = (TextView) navigationView.findViewById(R.id.txtViewNameUser);
         emailTextView=(TextView) navigationView.findViewById(R.id.txtViewEmailUser);
-
+        simpleDraweeView = (SimpleDraweeView) navigationView.findViewById(R.id.user_imageview);
 
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -78,10 +80,14 @@ public class HomeActivity extends AppCompatActivity
         }else
             userModel = SharedPreferenceManager.getSharedInstance().getUserModelFromPreferences();
 
-       /* Log.d("app"," user email:"+userModel.userEmail);
-        Log.d("app"," user name:"+userModel.userName);
-        nameTextView.setText("casa");
-        emailTextView.setText("casa@sasa");*/
+
+        System.out.println(userModel.toString());
+        DataBaseAdapter data = DataBaseAdapter.getInstance(this);
+        String result=data.listarTabelas();
+        Log.d(AppLog.DATABASE,result);
+        User u = data.getUser();
+        System.out.println(""+u);
+
 
     }
 
@@ -115,8 +121,8 @@ public class HomeActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         Log.d("app"," user email:"+userModel.userEmail);
         Log.d("app"," user name:"+userModel.userName);
-        /*simpleDraweeView = ButterKnife.findById(headerView, R.id.user_imageview);
-        simpleDraweeView.setImageURI(Uri.parse(userModel.profilePic));*/
+        simpleDraweeView = ButterKnife.findById(headerView, R.id.user_imageview);
+        simpleDraweeView.setImageURI(Uri.parse(userModel.profilePic));
 
         nameTextView = ButterKnife.findById(headerView, R.id.txtViewNameUser);
         nameTextView.setText(userModel.userName);

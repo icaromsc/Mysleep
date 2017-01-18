@@ -8,6 +8,8 @@ import android.os.Parcelable;
  */
 public class UserModel implements Parcelable {
 
+    public String idGoogle;
+    public String idFacebook;
     public String userName;
     public String userEmail;
     public String profilePic;
@@ -32,6 +34,8 @@ public class UserModel implements Parcelable {
     }
 
     private UserModel(Parcel parcel) {
+        idGoogle = parcel.readString();
+        idFacebook = parcel.readString();
         userName = parcel.readString();
         userEmail = parcel.readString();
         profilePic = parcel.readString();
@@ -41,6 +45,8 @@ public class UserModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flag) {
+        parcel.writeString(idGoogle);
+        parcel.writeString(idFacebook);
         parcel.writeString(userName);
         parcel.writeString(userEmail);
         parcel.writeString(profilePic);
@@ -50,5 +56,17 @@ public class UserModel implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    @Override
+    public String toString() {
+        return "UserModel{" +
+                "idGoogle='" + idGoogle + '\'' +
+                ", idFacebook='" + idFacebook + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", profilePic='" + profilePic + '\'' +
+                ", gender='" + gender + '\'' +
+                '}';
     }
 }

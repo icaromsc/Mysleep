@@ -26,9 +26,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import br.edu.ufcspa.snorlax_angelo.constants.AppConstants;
+import br.edu.ufcspa.snorlax_angelo.database.DataBaseAdapter;
 import br.edu.ufcspa.snorlax_angelo.helpers.FbConnectHelper;
 import br.edu.ufcspa.snorlax_angelo.helpers.GooglePlusSignInHelper;
 import br.edu.ufcspa.snorlax_angelo.managers.SharedPreferenceManager;
+import br.edu.ufcspa.snorlax_angelo.model.User;
 import br.edu.ufcspa.snorlax_angelo.model.UserModel;
 import ufcspa.edu.br.snorlax_angelo.R;
 import butterknife.Bind;
@@ -139,6 +141,7 @@ public class FragmentLogin extends Fragment implements FbConnectHelper.OnFbSignI
             userModel.userName = jsonObject.getString("name");
             userModel.userEmail = jsonObject.getString("email");
             String id = jsonObject.getString("id");
+            userModel.idFacebook=id;
             String profileImg = "http://graph.facebook.com/"+ id+ "/picture?type=large";
             userModel.profilePic = profileImg;
             Log.i(TAG,profileImg);
@@ -159,6 +162,7 @@ public class FragmentLogin extends Fragment implements FbConnectHelper.OnFbSignI
         UserModel userModel = new UserModel();
         userModel.userName = (acct.getDisplayName()==null)?"":acct.getDisplayName();
         userModel.userEmail = acct.getEmail();
+        userModel.idGoogle=person.getId();
 
         Log.i(TAG, "OnGSignSuccess: AccessToken "+ acct.getIdToken());
 
@@ -193,6 +197,15 @@ public class FragmentLogin extends Fragment implements FbConnectHelper.OnFbSignI
 
     private void startHomeActivity(UserModel userModel)
     {
+        User u = new User(1234,userModel.idGoogle,userModel.idFacebook,userModel.userName,userModel.userEmail,userModel.profilePic);
+        if (u.getId_user_facebook()==null){
+            u.setId_user_facebook("");
+        }else if (u.getId_user_google()==null){
+            u.setId_user_google("");
+        }
+
+        DataBaseAdapter data = DataBaseAdapter.getInstance(getActivity());
+        data.insertUser(u);
         Intent intent = new Intent(getActivity(), HomeActivity.class);
         intent.putExtra(UserModel.class.getSimpleName(), userModel);
         startActivity(intent);

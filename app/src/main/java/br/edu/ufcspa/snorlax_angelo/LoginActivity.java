@@ -67,6 +67,8 @@ public class LoginActivity extends FragmentActivity {
 
                 // Add the fragment to the 'fragment_container' FrameLayout
                 getSupportFragmentManager().beginTransaction().add(R.id.content_frame_login, loginFragment).commit();
+
+
             }
         }
     }
