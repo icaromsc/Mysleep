@@ -8,14 +8,39 @@ import java.util.Date;
 
 public class Recording {
     private Integer idRecording;
-    private Date dateStart;
-    private Date dateStop;
+    private String dateStart;
+    private String dateStop;
     private String status;
 
-    public Recording(Date dateStart, Date dateStop, String status) {
+    public final static String STATUS_PROCESSING="P";
+    public final static String STATUS_FINISHED="F";
+    /*
+    *  flags used in status
+    *
+    * */
+
+    public Recording(Integer idRecording, String dateStart, String dateStop, String status) {
+        this.idRecording = idRecording;
         this.dateStart = dateStart;
         this.dateStop = dateStop;
         this.status = status;
+    }
+
+
+    public String getDateStart() {
+        return dateStart;
+    }
+
+    public void setDateStart(String dateStart) {
+        this.dateStart = dateStart;
+    }
+
+    public String getDateStop() {
+        return dateStop;
+    }
+
+    public void setDateStop(String dateStop) {
+        this.dateStop = dateStop;
     }
 
     public Integer getIdRecording() {
@@ -26,21 +51,7 @@ public class Recording {
         this.idRecording = idRecording;
     }
 
-    public Date getDateStart() {
-        return dateStart;
-    }
 
-    public void setDateStart(Date dateStart) {
-        this.dateStart = dateStart;
-    }
-
-    public Date getDateStop() {
-        return dateStop;
-    }
-
-    public void setDateStop(Date dateStop) {
-        this.dateStop = dateStop;
-    }
 
     public String getStatus() {
         return status;

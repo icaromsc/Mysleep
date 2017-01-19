@@ -14,11 +14,15 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import br.edu.ufcspa.snorlax_angelo.model.RecordedFiles;
+import br.edu.ufcspa.snorlax_angelo.model.Recording;
 import br.edu.ufcspa.snorlax_angelo.model.User;
 
 
@@ -32,8 +36,11 @@ public class DataBaseAdapter {
     private static DataBaseAdapter mInstance = null;
     private SQLiteDatabase db;
     private DataBase helper;
-    private String tag = "BANCO DE DADOS ";
+    private String tag = "database";
     private Context context;
+    private static String TB_RECORDINGS="recordings";
+    private static String TB_USERS="users";
+    private static String TB_RECORDED_FILES="recorded_files";
 
     private DataBaseAdapter(Context ctx) {
         helper = DataBase.getInstance(ctx);
@@ -105,6 +112,135 @@ public class DataBaseAdapter {
 
         return user;
     }
+
+
+
+    public int insertRecording(Recording rec) {
+        ContentValues cv = new ContentValues();
+        cv.put("date_start", String.valueOf(rec.getDateStart()));
+        cv.put("status", Recording.STATUS_PROCESSING);
+        try {
+            db.insert(TB_RECORDINGS, null, cv);
+
+        }catch (SQLiteConstraintException v){
+            // Log.e(tag, "errro, usuario já existe no banco");
+            v.printStackTrace();
+        }
+        catch (Exception e) {
+            Log.e(tag, "erro ao inserir recording:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+        Cursor cursor = db.rawQuery("select seq from sqlite_sequence where name = '"+TB_RECORDINGS+"' ;", null);
+        int lastID = 0;
+        if (cursor.moveToFirst()) {
+            lastID = cursor.getInt(0);
+            Log.d(tag, "last id_recording in table:" + lastID);
+        }
+        return lastID;
+
+    }
+
+    public void insertRecordedFile(RecordedFiles rec) {
+        ContentValues cv = new ContentValues();
+        cv.put("id_recording", rec.getIdRecording());
+        cv.put("filename", rec.getFilename());
+        cv.put("status", RecordedFiles.STATUS_PENDING_UPLOAD);
+        try {
+            db.insert(TB_RECORDED_FILES, null, cv);
+
+        }catch (SQLiteConstraintException v){
+            // Log.e(tag, "errro, usuario já existe no banco");
+            v.printStackTrace();
+        }
+        catch (Exception e) {
+            Log.e(tag, "erro ao inserir recorded_files:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    public void updateFinalizeRecording(Recording recording) {
+        ContentValues cv = new ContentValues();
+        cv.put("date_stop", String.valueOf(recording.getDateStop()));
+        cv.put("status", Recording.STATUS_FINISHED);
+        try {
+            db.update(TB_RECORDINGS, cv, "id_recording=?", new String[]{"" + recording.getIdRecording()});
+        } catch (Exception e) {
+            Log.d(tag,"error updating recording:"+ e.getMessage());
+        }
+    }
+
+    public void updateStatusRecordedFile(RecordedFiles rec) {
+        ContentValues cv = new ContentValues();
+        cv.put("status", rec.getStatus_upload());
+        try {
+            db.update(TB_RECORDED_FILES, cv, "id_recorded_file=?", new String[]{"" + rec.getIdRecordedFile()});
+        } catch (Exception e) {
+            Log.d(tag,"error updating recorded_file:"+ e.getMessage());
+        }
+    }
+
+
+    public List<Recording> getRecordings() {
+        Recording recording;
+        ArrayList<Recording> lista = new ArrayList<>();
+        Cursor c = null;
+        String query = "SELECT * FROM ".concat(TB_RECORDINGS);
+        c = db.rawQuery(query, null);
+        if (c.moveToFirst()) {
+            do {
+                recording = new Recording(c.getInt(0),c.getString(1),c.getString(2),c.getString(3));
+                //            user.setPhoto(c.getString(5), null);
+                lista.add(recording);
+            } while (c.moveToNext());
+        }
+        return lista;
+    }
+
+
+    public List<RecordedFiles> getRecordedFiles() {
+        RecordedFiles rec;
+        ArrayList<RecordedFiles> lista = new ArrayList<>();
+        Cursor c = null;
+        String query = "SELECT * FROM ".concat(TB_RECORDED_FILES);
+        c = db.rawQuery(query, null);
+        if (c.moveToFirst()) {
+            do {
+                rec = new RecordedFiles(c.getInt(0),c.getInt(1),c.getString(2),c.getString(3));
+                lista.add(rec);
+            } while (c.moveToNext());
+        }
+        return lista;
+    }
+
+    public List<RecordedFiles> getRecordedFilesToBeUploaded() {
+        RecordedFiles rec;
+        ArrayList<RecordedFiles> lista = new ArrayList<>();
+        Cursor c = null;
+        String query = "SELECT * FROM ".concat(TB_RECORDED_FILES).concat(" WHERE status = '").concat(RecordedFiles.STATUS_PENDING_UPLOAD).concat("';");
+        Log.d(tag,"getRecToUp query: "+query);
+        c = db.rawQuery(query, null);
+        if (c.moveToFirst()) {
+            do {
+                rec = new RecordedFiles(c.getInt(0),c.getInt(1),c.getString(2),c.getString(3));
+                lista.add(rec);
+            } while (c.moveToNext());
+        }
+        return lista;
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 

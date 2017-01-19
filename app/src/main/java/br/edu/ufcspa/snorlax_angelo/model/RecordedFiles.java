@@ -11,7 +11,19 @@ public class RecordedFiles {
     private String status_upload;
 
 
+
+    public final static String STATUS_PENDING_UPLOAD="P";
+    public final static String STATUS_UPLOAD_FINISHED="F";
+
+
     public RecordedFiles(Integer idRecording, String filename, String status_upload) {
+        this.idRecording = idRecording;
+        this.filename = filename;
+        this.status_upload = status_upload;
+    }
+
+    public RecordedFiles(Integer idRecordedFile, Integer idRecording, String filename, String status_upload) {
+        this.idRecordedFile = idRecordedFile;
         this.idRecording = idRecording;
         this.filename = filename;
         this.status_upload = status_upload;
