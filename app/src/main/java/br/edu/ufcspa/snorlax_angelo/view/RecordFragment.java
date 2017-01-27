@@ -29,7 +29,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import br.edu.ufcspa.snorlax_angelo.AppLog;
 import br.edu.ufcspa.snorlax_angelo.database.DataBaseAdapter;
@@ -84,6 +86,7 @@ public class RecordFragment extends Fragment {
     private SeekBar seekBar;
 
     View myView;
+    private int idRecording = 0;
 
 
 
@@ -201,6 +204,8 @@ public class RecordFragment extends Fragment {
             }
         });                                      //:)
         alerta = builder.create();
+
+
 
     }
 
@@ -394,9 +399,10 @@ public class RecordFragment extends Fragment {
 
         //DataBaseAdapter data = DataBaseAdapter.getInstance(getActivity());
         //data.insertRecording(new Recording(0,getActualDate(),null,null));
+        idRecording = saveRecordingOnDatabase();
         while(isRecording) {
             fileToprocess = writeAudioDataToFile(record_size);
-
+            saveTempRecordingFile(fileToprocess,idRecording);
         }
         isProcessing = false;
     }
@@ -504,11 +510,13 @@ public class RecordFragment extends Fragment {
 
             recorder.stop();
             recorder.release();
-
+            // update on SQLITE recording status and
+            updateRecording(idRecording,getActualDate());
             recorder = null;
             recordingThread = null;
 
             processingThread = null;
+            listRecordings();
 
         }
 
@@ -526,6 +534,7 @@ public class RecordFragment extends Fragment {
 
 
     private void saveTempRecordingFile(String filename,int idRecording){
+        Log.d("database","salvando temp recording file[ filename: "+filename+" idRec:"+idRecording+" ]");
         RecordedFiles rec = new RecordedFiles(idRecording,filename,null);
         DataBaseAdapter data = DataBaseAdapter.getInstance(getActivity());
         data.insertRecordedFile(rec);
@@ -534,15 +543,42 @@ public class RecordFragment extends Fragment {
 
     private String getActualDate(){
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
         String strDate = sdf.format(c.getTime());
         return strDate;
+    }
+
+
+    private void updateRecording(int idRecording,String date){
+        DataBaseAdapter data = DataBaseAdapter.getInstance(getActivity());
+        Recording recording = new Recording(idRecording,null,date,null);
+        if(data.updateFinalizeRecording(recording))
+            Log.d("database","updated recording[ id: "+idRecording+" stopDate:"+date+" ]");
+        else
+            Log.e("database","error updating recording");
     }
 
 
     private int saveRecordingOnDatabase(){
         DataBaseAdapter data = DataBaseAdapter.getInstance(getActivity());
         return data.insertRecording(new Recording(0,getActualDate(),null,null));
+    }
+
+    private void listRecordings() {
+        DataBaseAdapter data = DataBaseAdapter.getInstance(getActivity());
+        ArrayList<RecordedFiles> recordedFilesArrayList = (ArrayList<RecordedFiles>) data.getRecordedFiles();
+        ArrayList<Recording> recordingArrayList = (ArrayList<Recording>) data.getRecordings();
+
+        if (recordedFilesArrayList.size() > 0) {
+            for (RecordedFiles f : recordedFilesArrayList) {
+                Log.d("database", "recorded file: " + f.toString());
+            }
+        }
+        if (recordingArrayList.size()>0){
+            for(Recording r : recordingArrayList){
+                Log.d("database", "recording: " + r.toString());
+            }
+        }
     }
 
 

@@ -162,14 +162,16 @@ public class DataBaseAdapter {
     }
 
 
-    public void updateFinalizeRecording(Recording recording) {
+    public boolean updateFinalizeRecording(Recording recording) {
         ContentValues cv = new ContentValues();
-        cv.put("date_stop", String.valueOf(recording.getDateStop()));
+        cv.put("date_stop", recording.getDateStop());
         cv.put("status", Recording.STATUS_FINISHED);
         try {
             db.update(TB_RECORDINGS, cv, "id_recording=?", new String[]{"" + recording.getIdRecording()});
+            return true;
         } catch (Exception e) {
             Log.d(tag,"error updating recording:"+ e.getMessage());
+            return false;
         }
     }
 
