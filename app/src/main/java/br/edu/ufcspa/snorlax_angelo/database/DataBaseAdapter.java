@@ -131,7 +131,7 @@ public class DataBaseAdapter {
             e.printStackTrace();
         }
 
-        Cursor cursor = db.rawQuery("select seq from sqlite_sequence where name = '"+TB_RECORDINGS+"' ;", null);
+        Cursor cursor = db.rawQuery("SELECT MAX(id_recording) FROM "+TB_RECORDINGS+";", null);
         int lastID = 0;
         if (cursor.moveToFirst()) {
             lastID = cursor.getInt(0);
@@ -145,7 +145,7 @@ public class DataBaseAdapter {
         ContentValues cv = new ContentValues();
         cv.put("id_recording", rec.getIdRecording());
         cv.put("filename", rec.getFilename());
-        cv.put("status", RecordedFiles.STATUS_PENDING_UPLOAD);
+        cv.put("status_upload", RecordedFiles.STATUS_PENDING_UPLOAD);
         try {
             db.insert(TB_RECORDED_FILES, null, cv);
 
