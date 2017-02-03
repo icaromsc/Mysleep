@@ -88,7 +88,9 @@ public class HomeActivity extends AppCompatActivity
         User u = data.getUser();
         System.out.println(""+u);
 
-
+        Intent intent = new Intent(this, UpService.class);
+        Log.d("snorlax","iniciando service...");
+        startService(intent);
     }
 
     private void setDataOnNavigationView(UserModel userModel) {

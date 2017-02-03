@@ -9,22 +9,15 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <application
-
-
         android:name="br.edu.ufcspa.snorlax_angelo.App"
         android:allowBackup="true"
         android:icon="@mipmap/mysleep_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar"
-
-
-        >
-        
-
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name="br.edu.ufcspa.snorlax_angelo.view.AudioRecorderActivity"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
         <activity
             android:name="br.edu.ufcspa.snorlax_angelo.TelaQuestionario"
             android:label="@string/title_activity_tela_questionario"
@@ -32,11 +25,8 @@
         <activity
             android:name="br.edu.ufcspa.snorlax_angelo.HomeActivity"
             android:label="@string/title_activity_aplication"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
-        <activity android:name="br.edu.ufcspa.snorlax_angelo.LoginActivity"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name="br.edu.ufcspa.snorlax_angelo.LoginActivity" />
         <activity
             android:name="br.edu.ufcspa.snorlax_angelo.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -46,16 +36,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
 
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/app_name" />
+        <service
+            android:name="br.edu.ufcspa.snorlax_angelo.UploadService"
+            android:enabled="true"
+            android:exported="false"></service>
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-
+        <service
+            android:name="br.edu.ufcspa.snorlax_angelo.UpService"
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
 
 </manifest>
