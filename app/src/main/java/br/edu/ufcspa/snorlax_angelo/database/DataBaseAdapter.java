@@ -177,7 +177,7 @@ public class DataBaseAdapter {
 
     public void updateStatusRecordedFile(RecordedFiles rec) {
         ContentValues cv = new ContentValues();
-        cv.put("status", rec.getStatus_upload());
+        cv.put("status_upload", rec.getStatus_upload());
         try {
             db.update(TB_RECORDED_FILES, cv, "id_recorded_file=?", new String[]{"" + rec.getIdRecordedFile()});
         } catch (Exception e) {
@@ -222,7 +222,7 @@ public class DataBaseAdapter {
         RecordedFiles rec;
         ArrayList<RecordedFiles> lista = new ArrayList<>();
         Cursor c = null;
-        String query = "SELECT * FROM ".concat(TB_RECORDED_FILES).concat(" WHERE status = '").concat(RecordedFiles.STATUS_PENDING_UPLOAD).concat("';");
+        String query = "SELECT * FROM ".concat(TB_RECORDED_FILES).concat(" WHERE status_upload = '").concat(RecordedFiles.STATUS_PENDING_UPLOAD).concat("';");
         Log.d(tag,"getRecToUp query: "+query);
         c = db.rawQuery(query, null);
         if (c.moveToFirst()) {

@@ -10,18 +10,22 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import br.edu.ufcspa.snorlax_angelo.database.DataBaseAdapter;
+import br.edu.ufcspa.snorlax_angelo.model.RecordedFiles;
 import br.edu.ufcspa.snorlax_angelo.view.AudioRecorderActivity;
 
 /**
  * Created by Carlos on 03/10/2016.
  */
-class UploadFileAsync extends AsyncTask<String, Void, String> {
+public class UploadFileAsync extends AsyncTask<String, Void, String> {
     String sourceFileUri;
+    Integer idRecordedFile=0;
     @Override
     protected String doInBackground(String... params) {
         Log.d("app", "open task...");
         try {
             sourceFileUri = params[0];
+            idRecordedFile=Integer.valueOf(params[1]);
             Log.d("app","async task source file:"+sourceFileUri);
             HttpURLConnection conn = null;
             DataOutputStream dos = null;
@@ -100,6 +104,7 @@ class UploadFileAsync extends AsyncTask<String, Void, String> {
                     if (serverResponseCode == 200) {
                         Log.d("app","File upload complete");
                         Log.d("app", serverResponseMessage);
+                        updateStatusOnDatabase();
                         deleteTempFile(sourceFileUri);
                         //recursiveDelete(mDirectory1);
 
@@ -161,4 +166,12 @@ class UploadFileAsync extends AsyncTask<String, Void, String> {
             e.printStackTrace();
         }
     }
+
+    private void updateStatusOnDatabase(){
+        DataBaseAdapter data = DataBaseAdapter.getInstance(null);
+        RecordedFiles r = new RecordedFiles(idRecordedFile,RecordedFiles.STATUS_UPLOAD_FINISHED);
+        data.updateStatusRecordedFile(r);
+    }
+
+
 }

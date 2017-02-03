@@ -29,6 +29,11 @@ public class RecordedFiles {
         this.status_upload = status_upload;
     }
 
+    public RecordedFiles(Integer idRecordedFile, String status_upload) {
+        this.idRecordedFile = idRecordedFile;
+        this.status_upload = status_upload;
+    }
+
     public Integer getIdRecordedFile() {
         return idRecordedFile;
     }
