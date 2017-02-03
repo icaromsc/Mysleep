@@ -3,6 +3,8 @@ package br.edu.ufcspa.snorlax_angelo;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -28,7 +30,7 @@ public class UpService extends Service {
     private static final String AUDIO_RECORDER_FOLDER = "Snore_angELO";
 
     //
-    private Integer counter=1000 * 60;
+    private Integer counter=5000 * 60;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -55,7 +57,13 @@ public class UpService extends Service {
         {
             //Toast.makeText(ctx, "test", Toast.LENGTH_SHORT).show();
             Log.d("snorlax_service","running service...");
-            processFilesToBeUploaded();
+            if(isOnline())
+                processFilesToBeUploaded();
+            else {
+                Log.d("snorlax_service", "device offline...");
+                Intent intent = new Intent(ctx, UpService.class);
+                stopService(intent);
+            }
         }
     }
 
@@ -67,7 +75,11 @@ public class UpService extends Service {
 
     }
 
-
+    @Override
+    public boolean stopService(Intent name) {
+        Log.d("snorlax_service","finishing service...");
+        return super.stopService(name);
+    }
 
     private ArrayList<RecordedFiles> getFiles(){
         DataBaseAdapter data = DataBaseAdapter.getInstance(ctx);
@@ -89,6 +101,13 @@ public class UpService extends Service {
         String filename = r.getFilename();
         Log.d("snorlax_service","starting upload " + r.getFilename()+ " async mode...");
         new UploadFileAsync().execute(filename,String.valueOf(r.getIdRecordedFile()));
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
 }
