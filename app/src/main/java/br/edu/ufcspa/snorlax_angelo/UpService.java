@@ -61,8 +61,8 @@ public class UpService extends Service {
                 processFilesToBeUploaded();
             else {
                 Log.d("snorlax_service", "device offline...");
-                Intent intent = new Intent(ctx, UpService.class);
-                stopService(intent);
+                /*Intent intent = new Intent(ctx, UpService.class);
+                stopService(intent);*/
             }
         }
     }
