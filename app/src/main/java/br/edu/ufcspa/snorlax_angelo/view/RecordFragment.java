@@ -137,56 +137,6 @@ public class RecordFragment extends Fragment {
         recording_message = (RelativeLayout) myView.findViewById(R.id.record_message_layout);
         cronometro = (Chronometer) getView().findViewById(R.id.cronometro);
 
-        /*seekBar = (SeekBar) myView.findViewById(R.id.seekbar_stop_recording);
-
-
-
-
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-                if (seekBar.getProgress() > 95) {
-
-                } else {
-
-                    seekBar.setThumb(getResources().getDrawable(R.drawable.mysleep_icon));
-                }
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,
-                                          boolean fromUser) {
-                if(progress>95){
-                    seekBar.setThumb(getResources().getDrawable(R.mipmap.snore));
-                }
-
-            }
-        });
-*/
-        // teste do cronometro
-       /* cronometro.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
-            @Override
-            public void onChronometerTick(Chronometer cArg) {
-                long time = SystemClock.elapsedRealtime() - cArg.getBase();
-                int h   = (int)(time /3600000);
-                int m = (int)(time - h*3600000)/60000;
-                int s= (int)(time - h*3600000- m*60000)/1000 ;
-                String hh = h < 10 ? "0"+h: h+"";
-                String mm = m < 10 ? "0"+m: m+"";
-                String ss = s < 10 ? "0"+s: s+"";
-                cArg.setText(hh+":"+mm+":"+ss);
-            }
-        });*/
 
         btn_gravacao = ((Button) getView().findViewById(R.id.btn_gravacao));
         btn_gravacao.setOnClickListener(btnClick);
@@ -216,33 +166,12 @@ public class RecordFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -284,16 +213,7 @@ public class RecordFragment extends Fragment {
         }
     };
 
-    private String getFilename(){
-        String filepath = Environment.getExternalStorageDirectory().getPath();
-        File file = new File(filepath,AUDIO_RECORDER_FOLDER);
 
-        if(!file.exists()){
-            file.mkdirs();
-        }
-
-        return (file.getAbsolutePath() + "/" + "Final_" + System.currentTimeMillis() + AUDIO_RECORDER_FILE_EXT_WAV);
-    }
 
     private String getTempFilename(){
         String filepath = Environment.getExternalStorageDirectory().getPath();
@@ -319,27 +239,6 @@ public class RecordFragment extends Fragment {
         strDate+="_temp_"+tempNumber;
         return strDate;
     }
-
-    private String listFilesFromDir(){
-        String path = Environment.getExternalStorageDirectory().toString()+"/"+AUDIO_RECORDER_FOLDER+"/";
-        //Log.d("Files", "Path: " + path);
-        File f = new File(path);
-        File file[] = f.listFiles();
-        try{
-            if(file!=null && file.length>0) {
-                for (int i=0;i<file.length;i++){
-                    Log.d("app", "File in dir: " +file[i].getName() + "  Size: " + file.length);
-                }
-                return path+file[0].getName();
-
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
 
     private String getFinalTempFilename(){
         String filepath = Environment.getExternalStorageDirectory().getPath();
@@ -375,18 +274,6 @@ public class RecordFragment extends Fragment {
 
         recordingThread.start();
 
-        /* older version
-
-
-        processingThread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                processAudioData();
-            }
-        },"Process Audio Data Thread");
-
-        processingThread.start();*/
     }
 
 
@@ -396,61 +283,12 @@ public class RecordFragment extends Fragment {
     private void getAudioData(){
         fileToprocess = "";
         isProcessing = true;
-
-        //DataBaseAdapter data = DataBaseAdapter.getInstance(getActivity());
-        //data.insertRecording(new Recording(0,getActualDate(),null,null));
         idRecording = saveRecordingOnDatabase();
         while(isRecording) {
             fileToprocess = writeAudioDataToFile(record_size);
             saveTempRecordingFile(fileToprocess,idRecording);
         }
         isProcessing = false;
-    }
-
-    private void processAudioData(){
-
-/*       Create final processed audio file
-        FileOutputStream audioFinal = null;
-        filename = getFinalTempFilename();
-
-        try{
-            audioFinal = new FileOutputStream(filename);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } */
-
-        while (isProcessing){
-            filename = listFilesFromDir();
-            try{ //sleeps to try again
-                processingThread.sleep(record_size); //wait a minute
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (filename != null && !uploadingFile){ //exist a file to process
-                System.out.println("*** PROCESSANDO NOVO TEMP AUDIO");
-                try{
-                    Log.d("app", "uploading file...");
-                    fileToBeUploaded=filename;
-                    new UploadFileAsync().execute(fileToBeUploaded);
-
-//
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                fileToprocess = "";
-            }else if(!uploadingFile){
-                Log.d("app", "tried to upload file but another file are being uploaded");
-            }else{
-                Log.d("app", "there is no files to be uploaded");
-            }
-
-
-
-        }
     }
 
     private String writeAudioDataToFile(long record_size){

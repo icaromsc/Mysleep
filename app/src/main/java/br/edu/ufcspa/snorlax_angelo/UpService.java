@@ -92,7 +92,11 @@ public class UpService extends Service {
         if(recordedFiles.size()>0){
             for (RecordedFiles r: recordedFiles
                  ) {
-                uploadFile(r);
+                try {
+                    uploadFile(r);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
     }
