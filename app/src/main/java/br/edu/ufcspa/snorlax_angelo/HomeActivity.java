@@ -2,6 +2,9 @@ package br.edu.ufcspa.snorlax_angelo;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -11,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +23,14 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import br.edu.ufcspa.snorlax_angelo.database.DataBaseAdapter;
 import br.edu.ufcspa.snorlax_angelo.managers.SharedPreferenceManager;
@@ -41,6 +52,11 @@ public class HomeActivity extends AppCompatActivity
     TextView nameTextView;
     //@Bind(R.id.txtViewEmailUser)
     TextView emailTextView;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
@@ -51,7 +67,9 @@ public class HomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
 
-        content=(FrameLayout) findViewById(R.id.frame_content);
+        content = (FrameLayout) findViewById(R.id.frame_content);
+
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -61,7 +79,7 @@ public class HomeActivity extends AppCompatActivity
         toggle.syncState();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         nameTextView = (TextView) navigationView.findViewById(R.id.txtViewNameUser);
-        emailTextView=(TextView) navigationView.findViewById(R.id.txtViewEmailUser);
+        emailTextView = (TextView) navigationView.findViewById(R.id.txtViewEmailUser);
         simpleDraweeView = (SimpleDraweeView) navigationView.findViewById(R.id.user_imageview);
 
 
@@ -69,28 +87,31 @@ public class HomeActivity extends AppCompatActivity
 
 
         if (getFragmentManager().findFragmentById(R.id.frame_content) == null) {
-            FragmentManager fragmentManager= getFragmentManager();
+            FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_content, new InitFragment()).commit();
         }
         Log.d("app", " getting userModel");
         UserModel userModel = getUserModelFromIntent();
-        if(userModel!=null) {
+        if (userModel != null) {
             Log.d("app", " get from intent");
             setDataOnNavigationView(userModel);
-        }else
+        } else
             userModel = SharedPreferenceManager.getSharedInstance().getUserModelFromPreferences();
 
 
         System.out.println(userModel.toString());
         DataBaseAdapter data = DataBaseAdapter.getInstance(this);
-        String result=data.listarTabelas();
-        Log.d(AppLog.DATABASE,result);
+        String result = data.listarTabelas();
+        Log.d(AppLog.DATABASE, result);
         User u = data.getUser();
-        System.out.println(""+u);
+        System.out.println("" + u);
 
         Intent intent = new Intent(this, UpService.class);
-        Log.d("snorlax","iniciando service...");
+        Log.d("snorlax", "iniciando service...");
         startService(intent);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void setDataOnNavigationView(UserModel userModel) {
@@ -121,8 +142,8 @@ public class HomeActivity extends AppCompatActivity
 
     private void setupDrawerContent(UserModel userModel) {
         View headerView = navigationView.getHeaderView(0);
-        Log.d("app"," user email:"+userModel.userEmail);
-        Log.d("app"," user name:"+userModel.userName);
+        Log.d("app", " user email:" + userModel.userEmail);
+        Log.d("app", " user name:" + userModel.userName);
         simpleDraweeView = ButterKnife.findById(headerView, R.id.user_imageview);
         simpleDraweeView.setImageURI(Uri.parse(userModel.profilePic));
 
@@ -160,7 +181,7 @@ public class HomeActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            FragmentManager fragmentManager= getFragmentManager();
+            FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_content, new AboutFragment()).commit();
             return true;
 
@@ -173,17 +194,17 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        FragmentManager fragmentManager= getFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         int id = item.getItemId();
 
         if (id == R.id.nav_record) {
             // Handle the camera action
-          fragmentManager.beginTransaction().replace(R.id.frame_content, new RecordFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame_content, new RecordFragment()).commit();
 
         } else if (id == R.id.nav_report) {
             fragmentManager.beginTransaction().replace(R.id.frame_content, new ReportFragment()).commit();
 
-        }  else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_settings) {
             fragmentManager.beginTransaction().replace(R.id.frame_content, new SettingsFragment()).commit();
         } /*else if (id == R.id.nav_share) {
 
@@ -197,10 +218,44 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
-    private UserModel getUserModelFromIntent()
-    {
+    private UserModel getUserModelFromIntent() {
         Intent intent = getIntent();
         return intent.getParcelableExtra(UserModel.class.getSimpleName());
     }
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Home Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
+    }
 }

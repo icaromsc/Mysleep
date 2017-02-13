@@ -229,7 +229,7 @@ public class DataBaseAdapter {
         c = db.rawQuery(query, null);
         if (c.moveToFirst()) {
             do {
-                rec = new RecordedFiles(c.getInt(0),c.getInt(1),c.getString(2),c.getString(3));
+                rec = new RecordedFiles(c.getInt(0),c.getInt(1),c.getInt(2),c.getString(3),c.getString(4));
                 lista.add(rec);
             } while (c.moveToNext());
         }
