@@ -6,19 +6,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 import android.util.Log;
 
-import java.io.File;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import br.edu.ufcspa.snorlax_angelo.model.RecordedFiles;
@@ -145,6 +135,7 @@ public class DataBaseAdapter {
         ContentValues cv = new ContentValues();
         cv.put("id_recording", rec.getIdRecording());
         cv.put("filename", rec.getFilename());
+        cv.put("sequence", rec.getSequence());
         cv.put("status_upload", RecordedFiles.STATUS_PENDING_UPLOAD);
         try {
             db.insert(TB_RECORDED_FILES, null, cv);
@@ -165,7 +156,7 @@ public class DataBaseAdapter {
     public boolean updateFinalizeRecording(Recording recording) {
         ContentValues cv = new ContentValues();
         cv.put("date_stop", recording.getDateStop());
-        cv.put("status", Recording.STATUS_FINISHED);
+        cv.put("status", Recording.STATUS_UPLOADING);
         try {
             db.update(TB_RECORDINGS, cv, "id_recording=?", new String[]{"" + recording.getIdRecording()});
             return true;
@@ -211,7 +202,7 @@ public class DataBaseAdapter {
         c = db.rawQuery(query, null);
         if (c.moveToFirst()) {
             do {
-                rec = new RecordedFiles(c.getInt(0),c.getInt(1),c.getString(2),c.getString(3));
+                rec = new RecordedFiles(c.getInt(0),c.getInt(1),c.getInt(2),c.getString(3),c.getString(4));
                 lista.add(rec);
             } while (c.moveToNext());
         }

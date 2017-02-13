@@ -3,6 +3,7 @@ package br.edu.ufcspa.snorlax_angelo;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -209,7 +210,9 @@ public class FragmentLogin extends Fragment implements FbConnectHelper.OnFbSignI
         Intent intent = new Intent(getActivity(), HomeActivity.class);
         intent.putExtra(UserModel.class.getSimpleName(), userModel);
         startActivity(intent);
-        getActivity().finishAffinity();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            getActivity().finishAffinity();
+        }
     }
 
    /* @Override

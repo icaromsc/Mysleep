@@ -1,5 +1,8 @@
 package br.edu.ufcspa.snorlax_angelo.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by icaromsc on 18/01/2017.
  */
@@ -81,6 +84,21 @@ public class User {
                 ", email='" + email + '\'' +
                 ", picture='" + picture + '\'' +
                 '}';
+    }
+
+
+    public JSONObject toJson(){
+        JSONObject j = new JSONObject();
+        try {
+            j.put("id_user_facebook",getId_user_facebook());
+            j.put("id_user_google",getId_user_google());
+            j.put("name",getName());
+            j.put("email",getEmail());
+            j.put("smartphone_info","");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return j;
     }
 }
 

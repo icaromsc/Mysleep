@@ -12,8 +12,12 @@ public class Recording {
     private String dateStop;
     private String status;
 
+
+
+
     public final static String STATUS_PROCESSING="P";
-    public final static String STATUS_FINISHED="F";
+    public final static String STATUS_UPLOADING ="U";
+    public final static String STATUS_FINISHED ="F";
     /*
     *  flags used in status
     *
@@ -25,6 +29,9 @@ public class Recording {
         this.dateStop = dateStop;
         this.status = status;
     }
+
+
+
 
 
     public String getDateStart() {
@@ -65,9 +72,11 @@ public class Recording {
     public String toString() {
         return "Recording{" +
                 "idRecording=" + idRecording +
-                ", dateStart=" + dateStart +
-                ", dateStop=" + dateStop +
+                ", dateStart='" + dateStart + '\'' +
+                ", dateStop='" + dateStop + '\'' +
                 ", status='" + status + '\'' +
                 '}';
     }
 }
+
+

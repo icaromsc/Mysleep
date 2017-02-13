@@ -67,6 +67,8 @@ public class RecordFragment extends Fragment {
     private boolean isRecording = false;
     private boolean isProcessing = false;
     String fileToprocess = "";
+
+
     private int tempNumber=0;
 
 
@@ -87,6 +89,10 @@ public class RecordFragment extends Fragment {
 
     View myView;
     private int idRecording = 0;
+
+
+    // futura id do user servidor
+    private int codUser = 1234;
 
 
 
@@ -231,30 +237,17 @@ public class RecordFragment extends Fragment {
         return (file.getAbsolutePath() + "/" + filename+".raw");
     }
 
+
+
+
     private String createFilename(){
         tempNumber++;
-        Calendar c = Calendar.getInstance();
+        /*Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String strDate = sdf.format(c.getTime());
-        strDate+="_temp_"+tempNumber;
+*/      String strDate = codUser+"_"+idRecording+"_"+tempNumber;
         return strDate;
     }
 
-    private String getFinalTempFilename(){
-        String filepath = Environment.getExternalStorageDirectory().getPath();
-        File file = new File(filepath,AUDIO_RECORDER_FOLDER);
-
-        if(!file.exists()){
-            file.mkdirs();
-        }
-
-        File tempFile = new File(filepath,AUDIO_RECORDER_TEMP_FILE);
-
-        if(tempFile.exists())
-            tempFile.delete();
-
-        return (file.getAbsolutePath() + "/" + AUDIO_RECORDER_TEMP_FILE);
-    }
 
     private void startRecording(){
         recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
@@ -286,7 +279,7 @@ public class RecordFragment extends Fragment {
         idRecording = saveRecordingOnDatabase();
         while(isRecording) {
             fileToprocess = writeAudioDataToFile(record_size);
-            saveTempRecordingFile(fileToprocess,idRecording);
+            saveTempRecordingFile(fileToprocess,idRecording,tempNumber);
         }
         isProcessing = false;
     }
@@ -360,20 +353,10 @@ public class RecordFragment extends Fragment {
 
     }
 
-    private void deleteFinalTempFile() {
-        File file = new File(getFinalTempFilename());
-        file.delete();
-    }
 
-    private void deleteTempFile(String filename) {
-        File file = new File(filename);
-        file.delete();
-    }
-
-
-    private void saveTempRecordingFile(String filename,int idRecording){
-        Log.d("database","salvando temp recording file[ filename: "+filename+" idRec:"+idRecording+" ]");
-        RecordedFiles rec = new RecordedFiles(idRecording,filename,null);
+    private void saveTempRecordingFile(String filename,int idRecording,Integer sequence){
+        Log.d("database","salvando temp recording file[ filename: "+filename+" idRec:"+idRecording+" sequence:"+ sequence +" ]");
+        RecordedFiles rec = new RecordedFiles(idRecording,sequence,filename,null);
         DataBaseAdapter data = DataBaseAdapter.getInstance(getActivity());
         data.insertRecordedFile(rec);
     }

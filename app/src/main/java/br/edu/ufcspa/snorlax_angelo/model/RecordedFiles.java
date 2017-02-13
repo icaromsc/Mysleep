@@ -7,6 +7,7 @@ package br.edu.ufcspa.snorlax_angelo.model;
 public class RecordedFiles {
     private Integer idRecordedFile;
     private Integer idRecording;
+    private Integer sequence;
     private String filename;
     private String status_upload;
 
@@ -16,17 +17,19 @@ public class RecordedFiles {
     public final static String STATUS_UPLOAD_FINISHED="F";
 
 
-    public RecordedFiles(Integer idRecording, String filename, String status_upload) {
+    public RecordedFiles(Integer idRecording,Integer sequence, String filename, String status_upload) {
         this.idRecording = idRecording;
         this.filename = filename;
         this.status_upload = status_upload;
+        this.sequence=sequence;
     }
 
-    public RecordedFiles(Integer idRecordedFile, Integer idRecording, String filename, String status_upload) {
+    public RecordedFiles(Integer idRecordedFile, Integer idRecording,Integer sequence, String filename, String status_upload) {
         this.idRecordedFile = idRecordedFile;
         this.idRecording = idRecording;
         this.filename = filename;
         this.status_upload = status_upload;
+        this.sequence=sequence;
     }
 
     public RecordedFiles(Integer idRecordedFile, String status_upload) {
@@ -66,6 +69,14 @@ public class RecordedFiles {
         this.status_upload = status_upload;
     }
 
+
+    public Integer getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
+    }
 
     @Override
     public String toString() {
