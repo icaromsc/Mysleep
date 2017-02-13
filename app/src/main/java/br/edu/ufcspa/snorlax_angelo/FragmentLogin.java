@@ -26,6 +26,7 @@ import com.google.android.gms.plus.model.people.Person;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import br.edu.ufcspa.snorlax_angelo.client.LoginClient;
 import br.edu.ufcspa.snorlax_angelo.constants.AppConstants;
 import br.edu.ufcspa.snorlax_angelo.database.DataBaseAdapter;
 import br.edu.ufcspa.snorlax_angelo.helpers.FbConnectHelper;
@@ -130,7 +131,7 @@ public class FragmentLogin extends Fragment implements FbConnectHelper.OnFbSignI
         UserModel userModel = getUserModelFromGraphResponse(graphResponse);
         if(userModel!=null) {
             SharedPreferenceManager.getSharedInstance().saveUserModel(userModel);
-            startHomeActivity(userModel);
+            communicateWebService(userModel);
         }
     }
 
@@ -188,7 +189,7 @@ public class FragmentLogin extends Fragment implements FbConnectHelper.OnFbSignI
         Log.i(TAG, acct.getIdToken());
 
         SharedPreferenceManager.getSharedInstance().saveUserModel(userModel);
-        startHomeActivity(userModel);
+        communicateWebService(userModel);
     }
 
     @Override
@@ -198,21 +199,26 @@ public class FragmentLogin extends Fragment implements FbConnectHelper.OnFbSignI
 
     private void startHomeActivity(UserModel userModel)
     {
-        User u = new User(1234,userModel.idGoogle,userModel.idFacebook,userModel.userName,userModel.userEmail,userModel.profilePic);
-        if (u.getId_user_facebook()==null){
-            u.setId_user_facebook("");
-        }else if (u.getId_user_google()==null){
-            u.setId_user_google("");
-        }
-
-        DataBaseAdapter data = DataBaseAdapter.getInstance(getActivity());
-        data.insertUser(u);
         Intent intent = new Intent(getActivity(), HomeActivity.class);
         intent.putExtra(UserModel.class.getSimpleName(), userModel);
         startActivity(intent);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             getActivity().finishAffinity();
         }
+    }
+
+
+
+    private void communicateWebService(UserModel userModel){
+        User u = new User(0,userModel.idGoogle,userModel.idFacebook,userModel.userName,userModel.userEmail,userModel.profilePic);
+        if (u.getId_user_facebook()==null){
+            u.setId_user_facebook("");
+        }else if (u.getId_user_google()==null){
+            u.setId_user_google("");
+        }
+        LoginClient client = new LoginClient(getActivity(),u);
+        client.send();
+        startHomeActivity(userModel);
     }
 
    /* @Override

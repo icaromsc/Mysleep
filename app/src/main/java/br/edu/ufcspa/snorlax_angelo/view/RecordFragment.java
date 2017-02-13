@@ -92,7 +92,7 @@ public class RecordFragment extends Fragment {
 
 
     // futura id do user servidor
-    private int codUser = 1234;
+    private int codUser = 0;
 
 
 
@@ -277,6 +277,8 @@ public class RecordFragment extends Fragment {
         fileToprocess = "";
         isProcessing = true;
         idRecording = saveRecordingOnDatabase();
+        DataBaseAdapter data = DataBaseAdapter.getInstance(myView.getContext());
+        codUser=data.getUserId();
         while(isRecording) {
             fileToprocess = writeAudioDataToFile(record_size);
             saveTempRecordingFile(fileToprocess,idRecording,tempNumber);

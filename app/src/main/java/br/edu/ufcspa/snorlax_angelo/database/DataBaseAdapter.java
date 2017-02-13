@@ -66,6 +66,17 @@ public class DataBaseAdapter {
         return r;
     }
 
+
+    public Integer getUserId() {
+        String query = "SELECT id_user from users";
+        Integer id=0;
+        Cursor c = db.rawQuery(query, null);
+        if (c.moveToFirst()) {
+                id = c.getInt(0);
+        }
+        return id;
+    }
+
     public void insertUser(User user) {
             ContentValues cv = new ContentValues();
             cv.put("id_user", user.getIdUser());
