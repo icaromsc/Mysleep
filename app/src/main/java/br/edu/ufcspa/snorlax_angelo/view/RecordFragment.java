@@ -369,6 +369,7 @@ public class RecordFragment extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
         String strDate = sdf.format(c.getTime());
         return strDate;
+
     }
 
 
