@@ -46,7 +46,7 @@ import ufcspa.edu.br.snorlax_angelo.R;
 public class RecordFragment extends Fragment {
 
 
-    private long record_size = 60000; //1 minute
+    private long record_size = 60000*10; //1 minute
     private static final int RECORDER_BPP = 16;
     private static final String AUDIO_RECORDER_FILE_EXT_WAV = ".wav";
     private static final String AUDIO_RECORDER_FOLDER = "Snore_angELO";
