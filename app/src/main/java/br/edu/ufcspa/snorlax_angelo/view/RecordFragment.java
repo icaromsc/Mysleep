@@ -80,18 +80,14 @@ public class RecordFragment extends Fragment {
     private Chronometer cronometro;
     private Button btn_gravacao;
     private TextView txt_status;
-    private TextView txt_cap2;
+
 
     private AlertDialog alerta;
     private AlertDialog.Builder builder;
     private RelativeLayout recording_message;
-    private SeekBar seekBar;
 
     View myView;
     private int idRecording = 0;
-
-
-    // futura id do user servidor
     private int codUser = 0;
 
 
@@ -192,6 +188,7 @@ public class RecordFragment extends Fragment {
                 if(getActivity()!=null) {
                     getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 }
+                bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,RECORDER_CHANNELS,RECORDER_AUDIO_ENCODING);
                 AppLog.logString("Start Recording");
                 recording_message.setVisibility(View.VISIBLE);
                 startRecording();
@@ -290,8 +287,8 @@ public class RecordFragment extends Fragment {
         byte data[] = new byte[bufferSize];
         String filename = getTempFilename();
         FileOutputStream os = null;
-        Long minuteIni;
-        Long minuteAtu;
+        Long minuteIni= null;
+        Long minuteAtu = null;
         boolean limiteTime = true;
 
         try {
@@ -315,6 +312,7 @@ public class RecordFragment extends Fragment {
                         minuteAtu = cronometro.getDrawingTime();
                         if ((minuteAtu - minuteIni) > record_size){
                             Log.d("app","*** UM MINUTO: " + cronometro.getDrawingTime());
+                            Log.d("app","diff minuteAtu:" + minuteAtu + " minuteIni:"+minuteIni + " diff: "+(minuteAtu - minuteIni));
                             limiteTime = false;
                         }
                         else{

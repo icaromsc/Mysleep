@@ -18,6 +18,7 @@ import java.util.TimerTask;
 import br.edu.ufcspa.snorlax_angelo.database.DataBaseAdapter;
 import br.edu.ufcspa.snorlax_angelo.model.RecordedFiles;
 import br.edu.ufcspa.snorlax_angelo.view.UploadFileAsync;
+import br.edu.ufcspa.snorlax_angelo.view.UploadFilesAsync;
 
 /**
  * Created by icaromsc on 01/02/2017.
@@ -90,14 +91,17 @@ public class UpService extends Service {
         ArrayList<RecordedFiles> recordedFiles= new ArrayList<RecordedFiles>();
         recordedFiles=getFiles();
         if(recordedFiles.size()>0){
-            for (RecordedFiles r: recordedFiles
+            /*for (RecordedFiles r: recordedFiles
                  ) {
                 try {
                     uploadFile(r);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-            }
+            }*/
+            RecordedFiles[] files = new RecordedFiles[recordedFiles.size()];
+            recordedFiles.toArray(files);
+            new UploadFilesAsync().execute(files);
         }
     }
 

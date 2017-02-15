@@ -1,6 +1,8 @@
 package br.edu.ufcspa.snorlax_angelo;
 
+import android.app.ActivityManager;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -106,9 +108,18 @@ public class HomeActivity extends AppCompatActivity
         User u = data.getUser();
         System.out.println("" + u);
 
-        Intent intent = new Intent(this, UpService.class);
-        Log.d("snorlax", "iniciando service...");
-        startService(intent);
+
+
+
+
+
+        if(!isMyServiceRunning(UpService.class)) {
+            Intent intent = new Intent(this, UpService.class);
+            Log.d("snorlax", "iniciando service...");
+            startService(intent);
+        }else{
+            Log.w("snorlax", "service ja esta rodando...");
+        }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -258,4 +269,15 @@ public class HomeActivity extends AppCompatActivity
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

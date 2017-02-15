@@ -12,21 +12,28 @@ import java.net.URL;
 
 import br.edu.ufcspa.snorlax_angelo.database.DataBaseAdapter;
 import br.edu.ufcspa.snorlax_angelo.model.RecordedFiles;
-import br.edu.ufcspa.snorlax_angelo.view.AudioRecorderActivity;
+import br.edu.ufcspa.snorlax_angelo.model.UploadFile;
 
 /**
- * Created by Carlos on 03/10/2016.
+ * Created by icaromsc on 15/02/2017.
  */
-public class UploadFileAsync extends AsyncTask<String, Void, String> {
-    String sourceFileUri;
-    Integer idRecordedFile=0;
+
+public class UploadFilesAsync extends AsyncTask<RecordedFiles, Void, String> {
+    private static final String TAG ="snorlax_async";
     @Override
-    protected String doInBackground(String... params) {
-        Log.d("app", "open task...");
+    protected String doInBackground(RecordedFiles... params) {
+        Log.d(TAG, "open task...");
+        for (RecordedFiles file: params
+             ) {
+            upload(file);
+        }
+        return "Executed";
+    }
+
+
+    public void upload(RecordedFiles file){
         try {
-            sourceFileUri = params[0];
-            idRecordedFile=Integer.valueOf(params[1]);
-            Log.d("app","async task source file:"+sourceFileUri);
+            Log.d(TAG, "async task source file:" + file.getFilename());
             HttpURLConnection conn = null;
             DataOutputStream dos = null;
             String lineEnd = "\r\n";
@@ -35,7 +42,7 @@ public class UploadFileAsync extends AsyncTask<String, Void, String> {
             int bytesRead, bytesAvailable, bufferSize;
             byte[] buffer;
             int maxBufferSize = 10 * 1024 * 1024;
-            File sourceFile = new File(sourceFileUri);
+            File sourceFile = new File(file.getFilename());
             int serverResponseCode;
 
             if (sourceFile.isFile()) {
@@ -51,7 +58,7 @@ public class UploadFileAsync extends AsyncTask<String, Void, String> {
                     // Open a HTTP connection to the URL
                     conn = (HttpURLConnection) url.openConnection();
 
-                    Log.d("app","File upload started...");
+                    Log.d(TAG, "File upload started...");
                     conn.setDoInput(true); // Allow Inputs
                     conn.setDoOutput(true); // Allow Outputs
                     conn.setUseCaches(false); // Don't use a Cached Copy
@@ -61,13 +68,13 @@ public class UploadFileAsync extends AsyncTask<String, Void, String> {
                             "multipart/form-data");
                     conn.setRequestProperty("Content-Type",
                             "multipart/form-data;boundary=" + boundary);
-                    conn.setRequestProperty("uploadedfile", sourceFileUri);
+                    conn.setRequestProperty("uploadedfile", file.getFilename());
 
                     dos = new DataOutputStream(conn.getOutputStream());
 
                     dos.writeBytes(twoHyphens + boundary + lineEnd);
                     dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\""
-                            + sourceFileUri + "\"" + lineEnd);
+                            + file.getFilename() + "\"" + lineEnd);
 
                     dos.writeBytes(lineEnd);
 
@@ -79,9 +86,9 @@ public class UploadFileAsync extends AsyncTask<String, Void, String> {
 
                     // read file and write it into form...
                     bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-                    Log.d("app", "uploading file...");
+                    Log.d(TAG, "uploading file...");
                     while (bytesRead > 0) {
-                       // Log.d("-while (bytesRead > 0)", " ");
+                        // Log.d("-while (bytesRead > 0)", " ");
                         dos.write(buffer, 0, bufferSize);
                         bytesAvailable = fileInputStream.available();
                         bufferSize = Math
@@ -102,14 +109,14 @@ public class UploadFileAsync extends AsyncTask<String, Void, String> {
                             .getResponseMessage();
 
                     if (serverResponseCode == 200) {
-                        Log.d("app","File upload complete");
-                        Log.d("app", serverResponseMessage);
-                        updateStatusOnDatabase();
-                        deleteTempFile(sourceFileUri);
+                        Log.d(TAG, "File upload complete");
+                        Log.d(TAG, serverResponseMessage);
+                        updateStatusOnDatabase(file.getIdRecordedFile());
+                        deleteTempFile(file.getFilename());
                         //recursiveDelete(mDirectory1);
 
-                    }else{
-                        Log.e("app","Error, server returned: "+serverResponseCode+"/n"+serverResponseMessage);
+                    } else {
+                        Log.e(TAG, "Error, server returned: " + serverResponseCode + "/n" + serverResponseMessage);
                     }
 
                     // close the streams //
@@ -124,26 +131,39 @@ public class UploadFileAsync extends AsyncTask<String, Void, String> {
 
                 }
                 // dialog.dismiss();
-
-            }else{
-                Log.d("app","file no finded");
+            } else {
+                Log.d(TAG, "file no finded");
                 // End else block
-                Log.d("app", sourceFile.getAbsolutePath());
+                Log.d(TAG, sourceFile.getAbsolutePath());
             }
-
-
         } catch (Exception ex) {
             // dialog.dismiss();
 
             ex.printStackTrace();
         }
-        return "Executed";
     }
+
+    private void deleteTempFile(String filename) {
+        File file = new File(filename);
+        try {
+            boolean v=file.getCanonicalFile().delete();
+            Log.w(TAG, "File deleted: " + file +" state:" + v);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateStatusOnDatabase(int idRecordedFile){
+        DataBaseAdapter data = DataBaseAdapter.getInstance(null);
+        RecordedFiles r = new RecordedFiles(idRecordedFile,RecordedFiles.STATUS_UPLOAD_FINISHED);
+        data.updateStatusRecordedFile(r);
+    }
+
 
     @Override
     protected void onPostExecute(String result) {
         //AudioRecorderActivity.uploadingFile=false;
-        Log.d("app","finish task");
+        Log.d(TAG,"finish task");
     }
 
     @Override
@@ -156,22 +176,6 @@ public class UploadFileAsync extends AsyncTask<String, Void, String> {
 
     }
 
-
-    private void deleteTempFile(String filename) {
-        File file = new File(filename);
-        try {
-            boolean v=file.getCanonicalFile().delete();
-            Log.w("app", "File deleted: " + file +" state:" + v);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateStatusOnDatabase(){
-        DataBaseAdapter data = DataBaseAdapter.getInstance(null);
-        RecordedFiles r = new RecordedFiles(idRecordedFile,RecordedFiles.STATUS_UPLOAD_FINISHED);
-        data.updateStatusRecordedFile(r);
-    }
 
 
 }
