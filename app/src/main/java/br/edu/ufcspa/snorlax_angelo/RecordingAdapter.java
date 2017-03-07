@@ -79,15 +79,16 @@ public class RecordingAdapter extends BaseAdapter {
         try {
             myDate1 = (Date)formatter.parse(dateStart);
             myDate2 = (Date)formatter.parse(dateStop);
+            long start = myDate1.getTime();
+            long stop = myDate2.getTime();
+            DateFormat result = new SimpleDateFormat("HH:mm:ss");
+            String strDate = result.format((stop-start));
+            return strDate;
         } catch (ParseException e) {
             e.printStackTrace();
+            return null;
         }
 
-        long start = myDate1.getTime();
-        long stop = myDate2.getTime();
-        DateFormat result = new SimpleDateFormat("HH:mm:ss");
-        String strDate = result.format((stop-start));
-        return strDate;
     }
 
 
