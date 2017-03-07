@@ -41,7 +41,7 @@ public class UploadFilesAsync extends AsyncTask<RecordedFiles, Void, String> {
             String boundary = "*****";
             int bytesRead, bytesAvailable, bufferSize;
             byte[] buffer;
-            int maxBufferSize = 10 * 1024 * 1024;
+            int maxBufferSize = 4 * 1024 * 1024;
             File sourceFile = new File(file.getFilename());
             int serverResponseCode;
 
@@ -62,6 +62,7 @@ public class UploadFilesAsync extends AsyncTask<RecordedFiles, Void, String> {
                     conn.setDoInput(true); // Allow Inputs
                     conn.setDoOutput(true); // Allow Outputs
                     conn.setUseCaches(false); // Don't use a Cached Copy
+                    conn.setChunkedStreamingMode(1024);
                     conn.setRequestMethod("POST");
                     conn.setRequestProperty("Connection", "Keep-Alive");
                     conn.setRequestProperty("ENCTYPE",
