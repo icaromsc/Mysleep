@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import br.edu.ufcspa.snorlax_angelo.AppLog;
@@ -67,6 +68,7 @@ public class RecordFragment extends Fragment {
     private boolean isRecording = false;
     private boolean isProcessing = false;
     String fileToprocess = "";
+    String logApp="app";
 
 
     private int tempNumber=0;
@@ -278,6 +280,7 @@ public class RecordFragment extends Fragment {
         codUser=data.getUserId();
         while(isRecording) {
             fileToprocess = writeAudioDataToFile(record_size);
+            Log.d(logApp,"salvou arquivo, salvando agora no banco");
             saveTempRecordingFile(fileToprocess,idRecording,tempNumber);
         }
         isProcessing = false;
@@ -290,29 +293,38 @@ public class RecordFragment extends Fragment {
         Long minuteIni= null;
         Long minuteAtu = null;
         boolean limiteTime = true;
+        Calendar c = Calendar.getInstance();
+        Date dateStart;
+        Date dateAtual;
 
         try {
+            Log.d(logApp,"entrou no try");
             os = new FileOutputStream(filename);
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
+            Log.d(logApp,"entrou no catch");
             e.printStackTrace();
         }
 
         int read = 0;
 
-        Log.d("app","*** INICIANDO GRAVAÇÃO");
+        Log.d(logApp,"*** INICIANDO GRAVAÇÃO");
         if(null != os){
-            minuteIni = cronometro.getDrawingTime();
+            dateStart = c.getTime();
+            Log.d(logApp,"data start:"+dateStart.getTime());
             while(isRecording && limiteTime){
                 read = recorder.read(data, 0, bufferSize);
 
                 if(AudioRecord.ERROR_INVALID_OPERATION != read){
-                    try {
 
-                        minuteAtu = cronometro.getDrawingTime();
-                        if ((minuteAtu - minuteIni) > record_size){
-                            Log.d("app","*** UM MINUTO: " + cronometro.getDrawingTime());
-                            Log.d("app","diff minuteAtu:" + minuteAtu + " minuteIni:"+minuteIni + " diff: "+(minuteAtu - minuteIni));
+                    try {
+                        c = Calendar.getInstance();
+                        dateAtual=c.getTime();
+                        /*Log.d(logApp,"data atual:"+dateStart.getTime());
+                        Log.d(logApp,"compare datas:"+(dateAtual.getTime()-dateStart.getTime()));*/
+
+                        if ((dateAtual.getTime() - dateStart.getTime()) > record_size){
+                            Log.d(logApp,"entrou no no if para gravar em partes");
                             limiteTime = false;
                         }
                         else{
@@ -330,6 +342,8 @@ public class RecordFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else{
+            Log.d(logApp,"os empty");
         }
 
         return filename;
