@@ -144,6 +144,7 @@ public class UploadFileAsync extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         //AudioRecorderActivity.uploadingFile=false;
         Log.d("app","finish task");
+
     }
 
     @Override
