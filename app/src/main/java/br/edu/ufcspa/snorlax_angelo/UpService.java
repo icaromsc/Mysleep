@@ -29,9 +29,11 @@ public class UpService extends Service {
     private static Timer timer = new Timer();
     private Context ctx;
     private static final String AUDIO_RECORDER_FOLDER = "Snore_angELO";
-
+    MainTask myTask= new MainTask();;
     //
-    private Integer counter=5000 * 60;
+    private Integer counter=1000 * 60;
+    private boolean threadActive=false;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -43,37 +45,69 @@ public class UpService extends Service {
     public void onCreate()
     {
         super.onCreate();
+        Log.d("snorlax_service","on create service...");
         ctx = this;
-        startService();
+        if(!threadActive)
+            startService();
     }
 
     private void startService()
     {
-        timer.scheduleAtFixedRate(new mainTask(), 0, counter);
+        Log.d("snorlax_service","start service...");
+        timer.scheduleAtFixedRate(myTask, 0, counter);
+
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("snorlax_service","start thread looping...");
+                threadActive=true;
+                while (true){
+                    try {
+                        Thread.sleep(counter);
+                        process();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();*/
     }
 
-    private class mainTask extends TimerTask
+    protected class MainTask extends TimerTask
     {
         public void run()
         {
             //Toast.makeText(ctx, "test", Toast.LENGTH_SHORT).show();
-            Log.d("snorlax_service","running service...");
+            Log.d("snorlax_service","running Timer task...");
             if(isOnline())
                 processFilesToBeUploaded();
             else {
                 Log.d("snorlax_service", "device offline...");
                 /*Intent intent = new Intent(ctx, UpService.class);
                 stopService(intent);*/
+                cancel();
             }
+        }
+    }
+
+
+    public void process(){
+        Log.d("snorlax_service","running service process...");
+        if(isOnline())
+            processFilesToBeUploaded();
+        else {
+            Log.d("snorlax_service", "device offline...");
+                /*Intent intent = new Intent(ctx, UpService.class);
+                stopService(intent);*/
         }
     }
 
     public void onDestroy()
     {
         Log.d("snorlax_service","destroying service...");
-        super.onDestroy();
         //Toast.makeText(this, "Service Stopped ...", Toast.LENGTH_SHORT).show();
-
+        myTask=null;
+        super.onDestroy();
     }
 
     @Override
@@ -99,6 +133,8 @@ public class UpService extends Service {
                     e.printStackTrace();
                 }
             }*/
+
+            Log.d("snorlax_service","files to be uploaded:"+recordedFiles.size());
             RecordedFiles[] files = new RecordedFiles[recordedFiles.size()];
             recordedFiles.toArray(files);
             new UploadFilesAsync().execute(files);
@@ -118,5 +154,9 @@ public class UpService extends Service {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+    }
 }
 
