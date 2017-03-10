@@ -1,6 +1,7 @@
 package br.edu.ufcspa.snorlax_angelo;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import br.edu.ufcspa.snorlax_angelo.model.Recording;
 import ufcspa.edu.br.snorlax_angelo.R;
@@ -65,8 +67,8 @@ public class RecordingAdapter extends BaseAdapter {
         String duracao = getDuration(recording.getDateStart(),recording.getDateStop());
 
         title.setText(getTitle(recording.getDateStart()));
-        horario.setText("horário:"+getHour(recording.getDateStart()));
-        txDuracao.setText("duração:"+duracao);
+        horario.setText("Started: "+getHour(recording.getDateStart()));
+        txDuracao.setText("Monitoring time: "+duracao);
         status.setText(getStatus(recording.getStatus()));
         return view;
 
@@ -76,19 +78,31 @@ public class RecordingAdapter extends BaseAdapter {
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
         Date myDate1 = null;
         Date myDate2 = null;
+        if(dateStart!=null && dateStop != null){
         try {
             myDate1 = (Date)formatter.parse(dateStart);
             myDate2 = (Date)formatter.parse(dateStop);
             long start = myDate1.getTime();
             long stop = myDate2.getTime();
-            DateFormat result = new SimpleDateFormat("HH:mm:ss");
-            String strDate = result.format((stop-start));
-            return strDate;
+            long duration= stop-start;
+            return convertDuration(duration);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
         }
+        }else{
+            return new String();
+        }
 
+
+
+    }
+
+    private String convertDuration(long duration){
+        int seconds = (int) (duration / 1000) % 60 ;
+        int minutes = (int) ((duration / (1000*60)) % 60);
+        int hours   = (int) ((duration / (1000*60*60)) % 24);
+        return String.format("%02d:%02d:%02d",hours,minutes,seconds);
     }
 
 
@@ -108,9 +122,9 @@ public class RecordingAdapter extends BaseAdapter {
 
     public String getStatus(String status){
         if (status.equals("U")){
-            return "Upload em andamento";
+            return "Uploading";
         }else{
-            return "Upload Finalizado";
+            return "Upload Complete";
         }
     }
 

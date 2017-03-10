@@ -54,6 +54,7 @@ public class HomeActivity extends AppCompatActivity
     TextView nameTextView;
     //@Bind(R.id.txtViewEmailUser)
     TextView emailTextView;
+    Toolbar toolbar;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -65,7 +66,7 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aplication);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
 
@@ -90,7 +91,7 @@ public class HomeActivity extends AppCompatActivity
 
         if (getFragmentManager().findFragmentById(R.id.frame_content) == null) {
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_content, new InitFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame_content, new RecordFragment()).commit();
         }
         Log.d("app", " getting userModel");
         UserModel userModel = getUserModelFromIntent();
@@ -121,7 +122,12 @@ public class HomeActivity extends AppCompatActivity
             Log.w("snorlax", "service ja esta rodando...");
         }
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        toolbar.setTitle(R.string.title_fragment_record);
+
     }
+
+
 
     private void setDataOnNavigationView(UserModel userModel) {
         if (navigationView != null) {
@@ -154,7 +160,8 @@ public class HomeActivity extends AppCompatActivity
         Log.d("app", " user email:" + userModel.userEmail);
         Log.d("app", " user name:" + userModel.userName);
         simpleDraweeView = ButterKnife.findById(headerView, R.id.user_imageview);
-        simpleDraweeView.setImageURI(Uri.parse(userModel.profilePic));
+        //simpleDraweeView.setImageURI(Uri.parse(userModel.profilePic));
+        simpleDraweeView.setBackgroundResource(R.drawable.icone_app2);
 
         nameTextView = ButterKnife.findById(headerView, R.id.txtViewNameUser);
         nameTextView.setText(userModel.userName);
@@ -189,9 +196,10 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_content, new AboutFragment()).commit();
+            toolbar.setTitle(R.string.about_app);
             return true;
 
         }
@@ -210,11 +218,14 @@ public class HomeActivity extends AppCompatActivity
             // Handle the camera action
             fragmentManager.beginTransaction().replace(R.id.frame_content, new RecordFragment()).commit();
 
+
         } else if (id == R.id.nav_report) {
             fragmentManager.beginTransaction().replace(R.id.frame_content, new ReportFragment()).commit();
+            toolbar.setTitle(R.string.title_fragment_recording_list);
 
         } else if (id == R.id.nav_settings) {
             fragmentManager.beginTransaction().replace(R.id.frame_content, new SettingsFragment()).commit();
+            toolbar.setTitle(R.string.title_fragment_settings);
         } /*else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

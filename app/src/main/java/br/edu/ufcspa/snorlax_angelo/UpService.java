@@ -17,6 +17,7 @@ import java.util.TimerTask;
 
 import br.edu.ufcspa.snorlax_angelo.database.DataBaseAdapter;
 import br.edu.ufcspa.snorlax_angelo.model.RecordedFiles;
+import br.edu.ufcspa.snorlax_angelo.model.Recording;
 import br.edu.ufcspa.snorlax_angelo.view.UploadFileAsync;
 import br.edu.ufcspa.snorlax_angelo.view.UploadFilesAsync;
 
@@ -79,13 +80,16 @@ public class UpService extends Service {
         {
             //Toast.makeText(ctx, "test", Toast.LENGTH_SHORT).show();
             Log.d("snorlax_service","running Timer task...");
-            if(isOnline())
+            if(isOnline()){
                 processFilesToBeUploaded();
+                DataBaseAdapter data = DataBaseAdapter.getInstance(ctx);
+                data.updateStatusRecordingOnUploadFilesFinished();
+            }
             else {
                 Log.d("snorlax_service", "device offline...");
                 /*Intent intent = new Intent(ctx, UpService.class);
                 stopService(intent);*/
-                cancel();
+                //cancel();
             }
         }
     }
@@ -125,15 +129,6 @@ public class UpService extends Service {
         ArrayList<RecordedFiles> recordedFiles= new ArrayList<RecordedFiles>();
         recordedFiles=getFiles();
         if(recordedFiles.size()>0){
-            /*for (RecordedFiles r: recordedFiles
-                 ) {
-                try {
-                    uploadFile(r);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }*/
-
             Log.d("snorlax_service","files to be uploaded:"+recordedFiles.size());
             RecordedFiles[] files = new RecordedFiles[recordedFiles.size()];
             recordedFiles.toArray(files);
