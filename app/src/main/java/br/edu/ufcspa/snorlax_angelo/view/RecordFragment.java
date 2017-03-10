@@ -137,6 +137,7 @@ public class RecordFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getActivity().setTitle(R.string.title_fragment_record);
         bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,RECORDER_CHANNELS,RECORDER_AUDIO_ENCODING);
         recording_message = (RelativeLayout) myView.findViewById(R.id.record_message_layout);
         cronometro = (Chronometer) getView().findViewById(R.id.cronometro);
