@@ -177,6 +177,24 @@ public class DataBaseAdapter {
         }
     }
 
+
+
+
+
+    public void updateStatusRecordingOnUploadFilesFinished() {
+        String query = "UPDATE recordings set status = 'F'\n" +
+                "where\n" +
+                "(Select count (id_recorded_file) from recorded_files where recorded_files.id_recording = recordings.id_recording and recorded_files.status_upload = 'U') = 0\n" +
+                "and recordings.status = 'U'";
+        try{
+            db.execSQL(query);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
     public void updateStatusRecordedFile(RecordedFiles rec) {
         ContentValues cv = new ContentValues();
         cv.put("status_upload", rec.getStatus_upload());
